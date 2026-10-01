@@ -589,7 +589,18 @@ TERMS = """
 financial advice, and your employer's withholding may differ. Verify anything that matters with the IRS, your state
 revenue department or a qualified professional.</p>
 <h2>Accuracy</h2>
-<p>Federal and state schedules are reviewed when they change. Questions, corrections and bug reports are welcome.</p>
+<p>Federal and state schedules are reviewed when they change, and the "last updated" date in the footer shows when the
+site was last rebuilt. Questions, corrections and bug reports are welcome.</p>
+<h2>Permitted use</h2>
+<p>You may use these calculators for personal or commercial planning, link to any page, and quote the results with a
+link back to the page you used. You may not scrape the site at a rate that degrades service for other visitors,
+republish it wholesale as your own product, or present the estimates as advice from a licensed professional.</p>
+<h2>Availability</h2>
+<p>The site is served as static files and is provided free of charge, with no guarantee of uninterrupted availability.
+Features may change, and pages may be reorganised as the tax year progresses.</p>
+<h2>Changes to these terms</h2>
+<p>Material changes will be reflected on this page with an updated date. Continuing to use the site after a change
+means you accept the revised terms.</p>
 """
 
 

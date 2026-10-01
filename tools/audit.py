@@ -3,7 +3,8 @@
 import json, re, sys, urllib.request, urllib.error, xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor
 
-BASE = "https://paycheck-calculator-2026.okou.app"
+import os
+BASE = os.environ.get("SITE_BASE", "https://paycheck-calculator-2026.okou.app").rstrip("/")
 
 def get(url, method="GET"):
     req = urllib.request.Request(url, method=method, headers={"User-Agent": "Mozilla/5.0 (compatible; site-audit/1.0)"})
@@ -65,7 +66,7 @@ def main():
             problems.append((p, "meta robots noindex"))
         if not r["canonical"]:
             problems.append((p, "missing canonical"))
-        elif r["canonical"] != BASE + ("" if p == "/" else p):
+        elif r["canonical"].rstrip("/") != (BASE + ("" if p == "/" else p)).rstrip("/"):
             problems.append((p, "canonical mismatch: " + r["canonical"]))
         if r["h1"] != 1:
             problems.append((p, "h1 count = %d" % r["h1"]))
