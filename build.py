@@ -3,6 +3,7 @@
 Math single source of truth: assets/engine.js (executed through Node at build time).
 State data: data/states.json (parsed from the Tax Foundation 2026 workbook)."""
 import datetime
+import re
 import hashlib
 import html
 import json
@@ -16,6 +17,19 @@ TODAY = datetime.date.today().isoformat()
 BASE = "https://paycheck-calculator-2026.okou.app"
 YEAR = 2026
 ASSETS = {}
+GSC = ""
+ADSENSE = ""          # e.g. "ca-pub-1234567890123456"; set ADSENSE_CLIENT to inject ads
+
+
+def ad_slot(slot_id, label="Advertisement"):
+    """Ad container with reserved height. When no client is configured it renders nothing."""
+    if not ADSENSE:
+        return ""
+    return ('<div class="ad-slot"><span class="ad-label">{label}</span>'
+            '<ins class="adsbygoogle" style="display:block" data-ad-client="{client}" '
+            'data-ad-slot="{slot}" data-ad-format="auto" data-full-width-responsive="true"></ins>'
+            '<script>(adsbygoogle = window.adsbygoogle || []).push({{}});</script></div>').format(
+                label=label, client=ADSENSE, slot=slot_id).replace("{{", "{").replace("}}", "}")
 
 STATES = json.load(open(os.path.join(ROOT, "data", "states.json")))
 ORDER = sorted(STATES, key=lambda s: STATES[s]["name"])
@@ -30,6 +44,14 @@ HOURLY_RATES = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
 SALARIES = [40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000,
             85000, 90000, 95000, 100000, 110000, 120000, 130000, 150000, 200000]
 HOURS_PER_YEAR = 2080
+
+
+def trim(text, limit):
+    """Trim to a whole word within limit characters."""
+    if len(text) <= limit:
+        return text
+    cut = text[:limit].rsplit(" ", 1)[0].rstrip(" ,;:")
+    return cut + "."
 
 
 def usd(n):
@@ -152,6 +174,8 @@ HEAD = """<!DOCTYPE html>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{canonical}">
 <link rel="stylesheet" href="{root}{css}">
+<meta name="google-site-verification" content="{gsc}">
+{adsense_meta}
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:type" content="website">
@@ -182,6 +206,7 @@ FOOT = """</main>
     <p class="muted">Last updated {today}</p>
   </div>
 </footer>
+{adsense_script}
 <script src="{root}{states_js}"></script>
 <script src="{root}{engine}"></script>
 <script src="{root}{app}"></script>
@@ -199,7 +224,7 @@ def state_bracket_table(slug):
         for i, b in enumerate(brackets):
             upper = brackets[i + 1]["over"] if i + 1 < len(brackets) else None
             rng = (usd(b["over"]) + " – " + usd(upper - 1)) if upper else ("over " + usd(b["over"]))
-            out.append("<tr><td>{}</td><td>{}</td></tr>".format(pct(b["rate"]), rng))
+            out.append('<tr><td data-label="Rate">{}</td><td data-label="Taxable income">{}</td></tr>'.format(pct(b["rate"]), rng))
         return "".join(out)
     return ("""<div class="two-col">
   <div><h3>Single filer</h3><table class="examples"><thead><tr><th>Rate</th><th>Taxable income</th></tr></thead>
@@ -216,24 +241,43 @@ def example_table(slug):
     rows = []
     for inc in EXAMPLES_SINGLE:
         r = EX["{}|{}|single".format(slug, inc)]
-        rows.append("<tr><td>{g}</td><td>{fed}</td><td>{fica}</td><td>{st}</td><td>{net}</td><td>{mo}</td><td>{bw}</td></tr>".format(
+        rows.append('<tr><td data-label="Gross">{g}</td><td data-label="Federal tax">{fed}</td>'
+                    '<td data-label="FICA">{fica}</td><td data-label="State tax">{st}</td>'
+                    '<td data-label="Take-home / year">{net}</td><td data-label="/ month">{mo}</td>'
+                    '<td data-label="/ 2 weeks">{bw}</td></tr>'.format(
             g=usd(inc), fed=usd(r["federalTax"]), fica=usd(r["fica"]["total"]), st=usd(r["stateTax"]),
             net=usd(r["netAnnual"]), mo=usd(r["netPerPeriod"]["monthly"]), bw=usd(r["netPerPeriod"]["biweekly"])))
     for inc in EXAMPLES_MFJ:
         r = EX["{}|{}|mfj".format(slug, inc)]
-        rows.append("<tr class='alt'><td>{g} (joint)</td><td>{fed}</td><td>{fica}</td><td>{st}</td><td>{net}</td><td>{mo}</td><td>{bw}</td></tr>".format(
+        rows.append("<tr class='alt'><td data-label=\"Gross\">{g} (joint)</td><td data-label=\"Federal tax\">{fed}</td><td data-label=\"FICA\">{fica}</td><td data-label=\"State tax\">{st}</td><td data-label=\"Take-home / year\">{net}</td><td data-label=\"/ month\">{mo}</td><td data-label=\"/ 2 weeks\">{bw}</td></tr>".format(
             g=usd(inc), fed=usd(r["federalTax"]), fica=usd(r["fica"]["total"]), st=usd(r["stateTax"]),
             net=usd(r["netAnnual"]), mo=usd(r["netPerPeriod"]["monthly"]), bw=usd(r["netPerPeriod"]["biweekly"])))
     return "\n".join(rows)
+
+
+def wrap_tables(page):
+    """Wide data tables scroll inside their own container instead of stretching the page."""
+    return re.sub(r'(<table class="examples">.*?</table>)', r'<div class="tablewrap">\1</div>', page, flags=re.S)
+
+
+def write_page(path, page):
+    with open(path, "w") as f:
+        f.write(wrap_tables(page))
 
 
 def state_page(slug):
     s = STATES[slug]
     name = s["name"]
     canonical = "{}/{}-paycheck-calculator.html".format(BASE, slug)
-    title = "{} Paycheck Calculator (2026) — Take-Home Pay After Tax".format(name)
-    desc = ("Free {} paycheck calculator for 2026: enter your salary and see federal tax, FICA, {} state income tax "
-            "and your exact take-home pay per paycheck.").format(name, name)
+    title = "{} Paycheck Calculator (2026) — Take-Home Pay".format(name)
+    if len(title) > 62:
+        title = "{} Paycheck Calculator (2026)".format(name)
+    desc = ("Free {} paycheck calculator for 2026: enter your salary and see federal tax, FICA and {} state "
+            "income tax, plus your take-home pay per paycheck.").format(name, name)
+    if len(desc) > 158:
+        desc = ("Free {} paycheck calculator for 2026: work out your take-home pay after federal tax, FICA "
+                "and {} state income tax.").format(name, name)
+    desc = trim(desc, 158)
     schema = json.dumps({
         "@context": "https://schema.org", "@type": "WebApplication",
         "name": title, "applicationCategory": "FinanceApplication", "operatingSystem": "Web",
@@ -293,6 +337,8 @@ def state_page(slug):
 
 {calc}
 
+{ad_top}
+
 <section>
   <h2>What comes out of a {name} paycheck</h2>
   <table class="facts">{facts}</table>
@@ -306,7 +352,7 @@ def state_page(slug):
 
 <section>
   <h2>{name} take-home pay by salary</h2>
-  <table class="examples">
+  <table class="examples wide">
     <thead><tr><th>Gross salary</th><th>Federal tax</th><th>FICA</th><th>{abbr} state tax</th><th>Take-home / year</th><th>/ month</th><th>/ 2 weeks</th></tr></thead>
     <tbody>
 {examples}
@@ -324,6 +370,8 @@ def state_page(slug):
     <li><strong>Check the {fmt_word} state schedule.</strong> {state_tip}</li>
   </ul>
 </section>
+
+{ad_mid}
 
 <section>
   <h2>{name} paycheck questions</h2>
@@ -345,13 +393,12 @@ def state_page(slug):
                       "One flat rate applies from the first dollar, so the timing of bonuses barely changes the bill."
                       if fmt == "flat" else
                       "With no state wage tax, comparing offers comes down to federal brackets, FICA and local costs like property tax."),
-           faq_schema=faq_schema)
+           faq_schema=faq_schema, ad_top=ad_slot("1111111111"), ad_mid=ad_slot("2222222222"))
 
     page = HEAD.format(title=title, desc=desc, canonical=canonical, root="", schema=schema,
                        mode="state", bodyattr=' data-state="{}"'.format(slug), **ASSETS)
     page += body + FOOT.format(root="", sd="$16,100", today=TODAY, year=YEAR, **ASSETS)
-    with open(os.path.join(OUT, "{}-paycheck-calculator.html".format(slug)), "w") as f:
-        f.write(page)
+    write_page(os.path.join(OUT, "{}-paycheck-calculator.html".format(slug)), page)
     return canonical
 
 
@@ -371,9 +418,9 @@ def index_page():
     group_html = "\n".join(
         '<h2>{}</h2><div class="state-grid">{}</div>'.format(title, "".join(card(s) for s in slugs))
         for title, slugs in groups)
-    title = "Paycheck Calculator 2026 — Take-Home Pay For All 50 States"
-    desc = ("Free paycheck calculator for 2026 covering all 50 states and DC: federal tax, FICA, state income tax "
-            "and take-home pay per paycheck, with the 2026 brackets behind every number.")
+    title = "Paycheck Calculator 2026 — Take-Home Pay by State"
+    desc = ("Free 2026 paycheck calculator for all 50 states: federal tax, FICA, state income tax and your "
+            "take-home pay per paycheck.")
     schema = json.dumps({"@context": "https://schema.org", "@type": "WebSite", "name": "Take-Home Pay 2026"})
     body = """
 <h1>Paycheck calculator for 2026</h1>
@@ -391,6 +438,8 @@ Every state uses its own 2026 bracket schedule, and the numbers update when the 
   <li><strong>Local:</strong> New York City, Philadelphia, Detroit, most Ohio cities and Maryland counties add their own tax — use the local rate box above.</li>
 </ul></section>
 
+{ad_top}
+
 <section>{groups}</section>
 
 <section>
@@ -402,14 +451,13 @@ Every state uses its own 2026 bracket schedule, and the numbers update when the 
   <h2>Salary to hourly conversions</h2>
   <p class="statelinks">{salary_links}</p>
 </section>
-""".format(calc=CALC, groups=group_html,
+""".format(calc=CALC, ad_top=ad_slot("3333333333"), groups=group_html,
            hourly_links=" ".join('<a href="{0}-an-hour-is-how-much-a-year.html">${0}/hour</a>'.format(r) for r in HOURLY_RATES),
            salary_links=" ".join('<a href="{0}-a-year-is-how-much-an-hour.html">{1}</a>'.format(a, usd(a)) for a in SALARIES))
     page = HEAD.format(title=title, desc=desc, canonical=BASE + "/", root="", schema=schema,
                        mode="state", bodyattr="", **ASSETS)
     page += body + FOOT.format(root="", sd="$16,100", today=TODAY, year=YEAR, **ASSETS)
-    with open(os.path.join(OUT, "index.html"), "w") as f:
-        f.write(page)
+    write_page(os.path.join(OUT, "index.html"), page)
     return BASE + "/"
 
 
@@ -429,7 +477,7 @@ COMPARE_CALC = """
       <div><span class="label" id="c-name-b">—</span><strong id="c-net-b">—</strong><span class="sub" id="c-month-b">—</span></div>
     </div>
     <p class="verdict" id="c-verdict"></p>
-    <table class="examples">
+    <table class="examples wide">
       <thead><tr><th>State</th><th>Federal</th><th>FICA</th><th>State tax</th><th>Take-home</th><th>Effective rate</th></tr></thead>
       <tbody id="c-table"></tbody>
     </table>
@@ -441,9 +489,9 @@ COMPARE_CALC = """
 
 
 def compare_page():
-    title = "Compare Take-Home Pay By State (2026)"
-    desc = ("Compare your take-home pay in any two states for 2026. See the state income tax, effective rate and "
-            "monthly difference side by side before you take the offer or move.")
+    title = "Compare Take-Home Pay by State (2026)"
+    desc = ("Compare take-home pay in any two states for 2026: state income tax, effective rate and the monthly "
+            "difference, side by side.")
     schema = json.dumps({"@context": "https://schema.org", "@type": "WebApplication", "name": title,
                          "applicationCategory": "FinanceApplication", "offers": {"@type": "Offer", "price": "0"}})
     top = sorted(ORDER, key=lambda s: -(STATES[s]["single"][-1]["rate"] if STATES[s]["single"] else 0))[:5]
@@ -455,6 +503,8 @@ lands in your account after federal tax, FICA and state income tax.</p>
 
 {calc}
 
+{ad_top}
+
 <section>
   <h2>What usually decides it</h2>
   <ul class="tight">
@@ -464,14 +514,13 @@ lands in your account after federal tax, FICA and state income tax.</p>
     <li><strong>Look past income tax.</strong> States without wage tax often raise more from sales and property tax, so compare the whole bill, not just the paycheck.</li>
   </ul>
 </section>
-""".format(calc=COMPARE_CALC,
+""".format(calc=COMPARE_CALC, ad_top=ad_slot("4444444444"),
            notax=", ".join(STATES[s]["name"] for s in NO_TAX),
            top=", ".join(STATES[s]["name"] for s in top))
     page = HEAD.format(title=title, desc=desc, canonical=BASE + "/compare-take-home-pay-by-state.html",
                        root="", schema=schema, mode="compare", bodyattr="", **ASSETS)
     page += body + FOOT.format(root="", sd="$16,100", today=TODAY, year=YEAR, **ASSETS)
-    with open(os.path.join(OUT, "compare-take-home-pay-by-state.html"), "w") as f:
-        f.write(page)
+    write_page(os.path.join(OUT, "compare-take-home-pay-by-state.html"), page)
     return BASE + "/compare-take-home-pay-by-state.html"
 
 
@@ -516,8 +565,21 @@ site, never logged and never stored in a database. There is no account and no lo
 <p>This site may run analytics or advertising in future to cover hosting. When that happens those vendors may set
 cookies or read a device identifier to measure traffic and select ads. The specific vendors and a plain opt-out will
 be listed here before any such tag goes live.</p>
+<h2>Advertising and cookies</h2>
+<p>This site is supported by advertising. Third-party vendors, including Google, use cookies to serve ads based on your
+prior visits to this site or other websites. Google's use of advertising cookies enables it and its partners to serve
+ads to you based on your visit to this site and/or other sites on the internet.</p>
+<p>You can opt out of personalised advertising by visiting
+<a href="https://www.google.com/settings/ads" rel="nofollow noopener">Google Ads Settings</a>, or opt out of
+third-party vendor cookie use for personalised advertising at
+<a href="https://www.aboutads.info/choices/" rel="nofollow noopener">aboutads.info</a>. Visitors in the EEA, the UK or
+Switzerland are shown a consent message before any advertising cookie is set, and can change that choice at any time.
+California residents can exercise their opt-out rights using the same controls.</p>
+<h2>Data we do not collect</h2>
+<p>Salary, filing status, state and deduction inputs are processed in your browser only. They are never transmitted to
+this site, never written to a database and never shared with an advertiser.</p>
 <h2>Contact</h2>
-<p>Questions about this policy can be sent to the address on the site owner's profile page.</p>
+<p>Questions about this policy can be sent to the address published on the contact page.</p>
 """
 
 TERMS = """
@@ -538,8 +600,7 @@ def simple_page(slug, title, desc, body):
                        mode="state", bodyattr="", **ASSETS)
     page += "<h1>{}</h1>".format(title) + body
     page += FOOT.format(root="", sd="$16,100", today=TODAY, year=YEAR, **ASSETS)
-    with open(os.path.join(OUT, slug + ".html"), "w") as f:
-        f.write(page)
+    write_page(os.path.join(OUT, slug + ".html"), page)
     return canonical
 
 
@@ -554,26 +615,31 @@ def copy_assets():
         with open(os.path.join(OUT, "assets", name), "wb") as f:
             f.write(data)
         out[key] = "assets/" + name
+    out["gsc"] = GSC
+    out["adsense_meta"] = ('<meta name="google-adsense-account" content="{}">'.format(ADSENSE) if ADSENSE else "")
+    out["adsense_script"] = ('<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={}" crossorigin="anonymous"></script>'.format(ADSENSE) if ADSENSE else "")
     return out
 
 
 def hourly_page(rate):
     gross = rate * HOURS_PER_YEAR
-    title = "${} an Hour Is How Much a Year? (2026 Take-Home Pay)".format(rate)
-    desc = ("At ${0} an hour you earn {1} a year before tax. See the monthly, biweekly and weekly figures, plus "
-            "what actually lands in your account after federal tax and FICA in Texas, Florida, California, "
-            "New York and Illinois.").format(rate, usd(gross))
+    title = "${} an Hour Is How Much a Year? (2026)".format(rate)
+    desc = ("At ${0} an hour you earn {1} a year before tax: {2} a month, {3} every two weeks. See the take-home "
+            "pay after federal tax and FICA, state by state.").format(rate, usd(gross), usd(gross / 12), usd(gross / 26))
     slug = "{}-an-hour-is-how-much-a-year".format(rate)
     canonical = "{}/{}.html".format(BASE, slug)
     rows = []
     for hours in (40, 35, 30, 25, 20):
         annual = rate * hours * 52
-        rows.append("<tr><td>{} hours / week</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+        rows.append('<tr><td data-label="Schedule">{} hours / week</td><td data-label="Per year">{}</td>'
+                    '<td data-label="Per month">{}</td><td data-label="Every 2 weeks">{}</td></tr>'.format(
             hours, usd(annual), usd(annual / 12), usd(annual / 26)))
     ref_rows = []
     for st in REF_STATES:
         r = EX["ref|{}|{}".format(gross, st)]
-        ref_rows.append("<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+        ref_rows.append('<tr><td data-label="State">{}</td><td data-label="Federal tax">{}</td>'
+                        '<td data-label="FICA">{}</td><td data-label="State tax">{}</td>'
+                        '<td data-label="Take-home / year">{}</td></tr>'.format(
             STATES[st]["name"], usd(r["federalTax"]), usd(r["fica"]["total"]), usd(r["stateTax"]),
             usd(r["netAnnual"])))
     r_tx = EX["ref|{}|texas".format(gross)]
@@ -591,7 +657,7 @@ other weekly hours, and what is left after tax in five different states.</p>
 
 <section>
   <h2>${rate} an hour by hours worked</h2>
-  <table class="examples">
+  <table class="examples wide">
     <thead><tr><th>Schedule</th><th>Per year</th><th>Per month</th><th>Every 2 weeks</th></tr></thead>
     <tbody>{rows}</tbody>
   </table>
@@ -600,7 +666,7 @@ other weekly hours, and what is left after tax in five different states.</p>
 
 <section>
   <h2>What ${rate} an hour is after tax</h2>
-  <table class="examples">
+  <table class="examples wide">
     <thead><tr><th>State</th><th>Federal tax</th><th>FICA</th><th>State tax</th><th>Take-home / year</th></tr></thead>
     <tbody>{ref_rows}</tbody>
   </table>
@@ -636,27 +702,28 @@ other weekly hours, and what is left after tax in five different states.</p>
                        schema=json.dumps({"@context": "https://schema.org", "@type": "WebPage", "name": title}),
                        mode="state", bodyattr="", **ASSETS) + body
     page += FOOT.format(root="", sd="$16,100", today=TODAY, year=YEAR, **ASSETS)
-    with open(os.path.join(OUT, slug + ".html"), "w") as f:
-        f.write(page)
+    write_page(os.path.join(OUT, slug + ".html"), page)
     return canonical
 
 
 def salary_page(amount):
     hourly = amount / HOURS_PER_YEAR
-    title = "{} a Year Is How Much an Hour? (2026 Take-Home Pay)".format(usd(amount))
-    desc = ("{} a year works out to {:.2f} an hour at 40 hours a week. See the monthly and biweekly figures and "
-            "what is left after tax in Texas, Florida, California, New York and Illinois.").format(usd(amount), hourly)
+    title = "{} a Year Is How Much an Hour? (2026)".format(usd(amount))
+    desc = ("{} a year is {:.2f} an hour at 40 hours a week, or {} a month. See what is left after federal "
+            "tax and FICA in five states.").format(usd(amount), hourly, usd(amount / 12))
     slug = "{}-a-year-is-how-much-an-hour".format(amount)
     canonical = "{}/{}.html".format(BASE, slug)
     rows = []
     for hours in (40, 35, 30, 25, 20):
         h = amount / (hours * 52)
-        rows.append("<tr><td>{} hours / week</td><td>${:.2f}</td><td>{} per month</td></tr>".format(
-            hours, h, usd(amount / 12)))
+        rows.append('<tr><td data-label="Hours / week">{} hours</td><td data-label="Hourly rate">${:.2f}</td>'
+                    '<td data-label="Monthly gross">{}</td></tr>'.format(hours, h, usd(amount / 12)))
     ref_rows = []
     for st in REF_STATES:
         r = EX["ref|{}|{}".format(amount, st)]
-        ref_rows.append("<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+        ref_rows.append('<tr><td data-label="State">{}</td><td data-label="Federal tax">{}</td>'
+                        '<td data-label="FICA">{}</td><td data-label="State tax">{}</td>'
+                        '<td data-label="Take-home / year">{}</td><td data-label="/ month">{}</td></tr>'.format(
             STATES[st]["name"], usd(r["federalTax"]), usd(r["fica"]["total"]), usd(r["stateTax"]),
             usd(r["netAnnual"]), usd(r["netPerPeriod"]["monthly"])))
     near = [x for x in SALARIES if x != amount][:6]
@@ -668,7 +735,7 @@ a single filer keeps about {net_tx} of it in a state with no income tax.</p>
 
 <section>
   <h2>{amount} a year at other schedules</h2>
-  <table class="examples">
+  <table class="examples wide">
     <thead><tr><th>Hours / week</th><th>Hourly rate</th><th>Monthly gross</th></tr></thead>
     <tbody>{rows}</tbody>
   </table>
@@ -676,7 +743,7 @@ a single filer keeps about {net_tx} of it in a state with no income tax.</p>
 
 <section>
   <h2>{amount} after tax, state by state</h2>
-  <table class="examples">
+  <table class="examples wide">
     <thead><tr><th>State</th><th>Federal tax</th><th>FICA</th><th>State tax</th><th>Take-home / year</th><th>/ month</th></tr></thead>
     <tbody>{ref_rows}</tbody>
   </table>
@@ -710,13 +777,14 @@ a single filer keeps about {net_tx} of it in a state with no income tax.</p>
                        schema=json.dumps({"@context": "https://schema.org", "@type": "WebPage", "name": title}),
                        mode="state", bodyattr="", **ASSETS) + body
     page += FOOT.format(root="", sd="$16,100", today=TODAY, year=YEAR, **ASSETS)
-    with open(os.path.join(OUT, slug + ".html"), "w") as f:
-        f.write(page)
+    write_page(os.path.join(OUT, slug + ".html"), page)
     return canonical
 
 
 def main():
-    global EX, ASSETS
+    global EX, ASSETS, GSC, ADSENSE
+    ADSENSE = os.environ.get("ADSENSE_CLIENT", "")
+    GSC = os.environ.get("GSC_VERIFICATION", "")
     if os.path.isdir(OUT):
         shutil.rmtree(OUT)
     os.makedirs(os.path.join(OUT, "assets"))
@@ -727,6 +795,10 @@ def main():
         json.dump(STATES, f)
     EX = node_examples()
     ASSETS = copy_assets()
+    gsc = os.environ.get("GSC_VERIFICATION", "")
+    if gsc:
+        with open(os.path.join(OUT, "google{}.html".format(gsc)), "w") as f:
+            f.write("google-site-verification: google{}.html\n".format(gsc))
     urls = [index_page(), compare_page()]
     for slug in ORDER:
         urls.append(state_page(slug))
@@ -739,7 +811,10 @@ def main():
     urls.append(simple_page("privacy", "Privacy policy",
                             "What this site collects (nothing you type leaves your browser) and how analytics and ads are handled.", PRIVACY))
     urls.append(simple_page("terms", "Terms of use",
-                            "Plain-language terms for these free 2026 paycheck calculators.", TERMS))
+                            "Plain-language terms for the free 2026 paycheck calculators on this site, including what the estimates do and do not cover.", TERMS))
+    if ADSENSE:
+        with open(os.path.join(OUT, "ads.txt"), "w") as f:
+            f.write("google.com, {}, DIRECT, f08c47fec0942fa0\n".format(ADSENSE.replace("ca-", "")))
     with open(os.path.join(OUT, "robots.txt"), "w") as f:
         f.write("User-agent: *\nAllow: /\n\nSitemap: {}/sitemap.xml\n".format(BASE))
     with open(os.path.join(OUT, "sitemap.xml"), "w") as f:

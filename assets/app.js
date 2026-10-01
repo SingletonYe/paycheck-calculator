@@ -127,9 +127,10 @@
         ' per month) than ' + E.STATES[diff > 0 ? a : b].name + ' on a ' + E.money(amount) + ' salary.';
     $('c-table').innerHTML = [[E.STATES[a].name, ra], [E.STATES[b].name, rb]].map(function (pair) {
       var r = pair[1];
-      return '<tr><td>' + pair[0] + '</td><td>' + E.money(r.federalTax) + '</td><td>' + E.money(r.fica.total) +
-        '</td><td>' + E.money(r.stateTax) + '</td><td>' + E.money(r.netAnnual) + '</td><td>' +
-        E.pct(r.effectiveTotalRate) + '</td></tr>';
+      return '<tr><td data-label="State">' + pair[0] + '</td><td data-label="Federal">' + E.money(r.federalTax) +
+        '</td><td data-label="FICA">' + E.money(r.fica.total) + '</td><td data-label="State tax">' +
+        E.money(r.stateTax) + '</td><td data-label="Take-home">' + E.money(r.netAnnual) +
+        '</td><td data-label="Effective rate">' + E.pct(r.effectiveTotalRate) + '</td></tr>';
     }).join('');
   }
 
@@ -144,8 +145,18 @@
       renderCompare();
     } else {
       if ($('state')) fillStateSelect($('state'), body.getAttribute('data-state') || 'texas');
+      var lastFreq = $('freq').value;
       $('freq').addEventListener('change', function () {
-        $('hoursField').hidden = $('freq').value !== 'hourly';
+        // Keep the same annual pay when the period changes, so switching to "two weeks"
+        // turns 60000 a year into 2308 per check instead of 1.56M a year.
+        var prevHours = num($('hours') && $('hours').value, 40);
+        var annual = annualize(num($('amount').value, 0), lastFreq, prevHours);
+        var next = $('freq').value;
+        var nextHours = num($('hours') && $('hours').value, 40);
+        var divisor = next === 'hourly' ? nextHours * WEEKS : (DIVISOR[next] || 1);
+        if (divisor > 0) $('amount').value = Math.round(annual / divisor * 100) / 100;
+        lastFreq = next;
+        $('hoursField').hidden = next !== 'hourly';
         renderSingle();
       });
       $('hoursField').hidden = $('freq').value !== 'hourly';

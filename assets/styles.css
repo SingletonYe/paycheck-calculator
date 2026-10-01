@@ -29,11 +29,12 @@ ul.tight li, ol.tight li { margin-bottom: 6px; }
 .site-header nav a { margin-left: 16px; text-decoration: none; font-size: 0.92rem; }
 
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin: 18px 0 8px; }
-.calc-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-.field { display: flex; flex-direction: column; gap: 4px; }
+.calc-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(148px, 1fr)); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .field label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
 .field input, .field select {
   font: inherit; padding: 9px 10px; border: 1px solid #d1d5db; border-radius: 8px; background: #fff; color: var(--ink);
+  width: 100%; min-width: 0; max-width: 100%;
 }
 .field input:focus, .field select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 
@@ -86,3 +87,62 @@ details p { margin: 8px 0 0; color: #33383f; }
 .warn { color: #b45309; font-weight: 600; }
 .verdict { font-size: 1.02rem; background: var(--accent-soft); border-left: 3px solid var(--accent); padding: 10px 12px; border-radius: 0 8px 8px 0; }
 .examples tr.alt td { background: #f3f4f6; font-style: normal; }
+
+/* Mobile fixes: scrollable data tables, 44px tap targets */
+.tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 14px -6px 0; padding: 0 6px 2px; }
+.tablewrap table { margin-top: 0; }
+.tablewrap::-webkit-scrollbar { height: 6px; }
+.tablewrap::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+
+.site-header nav a, .statelinks a, .site-footer a, .state-card { display: inline-flex; align-items: center; min-height: 40px; }
+.site-header nav a { padding: 0 8px; }
+.statelinks { gap: 4px 10px; }
+details summary { display: flex; align-items: center; min-height: 44px; }
+.field input, .field select { min-height: 44px; }
+.brand { min-height: 44px; display: inline-flex; align-items: center; }
+
+@media (max-width: 620px) {
+  /* header: brand on its own row, nav below in one line */
+  .site-header .wrap { flex-direction: column; align-items: flex-start; gap: 0; padding-top: 6px; }
+  .brand { font-size: 0.95rem; min-height: 40px; }
+  .site-header nav { display: flex; width: 100%; }
+  .site-header nav a { margin-left: 0; padding: 0 12px 0 0; font-size: 0.88rem; min-height: 40px; }
+  .site-header { padding-bottom: 2px; }
+}
+
+@media (max-width: 560px) {
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.1rem; }
+  .headline strong { font-size: 1.45rem; }
+  .card { padding: 14px; border-radius: 10px; }
+  .calc-form { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .calc-form .field:nth-child(5), .calc-form .field:nth-child(6) { grid-column: 1 / -1; }
+  .examples th, .examples td { font-size: 0.78rem; padding: 7px 5px; white-space: nowrap; }
+  /* Wide tables become stacked cards on phones: no sideways scrolling needed */
+  .tablewrap { overflow-x: visible; margin: 12px 0 0; padding: 0; }
+  .examples.wide thead { display: none; }
+  .examples.wide, .examples.wide tbody, .examples.wide tr, .examples.wide td { display: block; width: 100%; }
+  .examples.wide tr { border-bottom: 1px solid var(--line); padding: 8px 0; }
+  .examples.wide td {
+    display: flex; justify-content: space-between; gap: 12px; text-align: right;
+    border: none; padding: 3px 0; white-space: normal; font-size: 0.88rem;
+  }
+  .examples.wide td::before {
+    content: attr(data-label); color: var(--muted); font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.04em; text-align: left; flex: 0 0 auto; padding-top: 2px;
+  }
+  .examples.wide td:first-child { font-weight: 600; }
+  .examples:not(.wide) th, .examples:not(.wide) td { font-size: 0.8rem; padding: 6px 4px; }
+  .breakdown th, .breakdown td { font-size: 0.82rem; padding: 7px 4px; }
+  .facts th { width: 52%; font-size: 0.85rem; }
+  .two-col { gap: 14px; }
+}
+
+/* Ad slots: height is reserved so ads cannot shift the layout (CLS) */
+.ad-slot { margin: 22px 0; }
+.ad-slot .ad-label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 4px; }
+.ad-slot ins, .ad-slot .ad-box {
+  display: block; min-height: 280px; background: #fff; border: 1px dashed var(--line);
+  border-radius: 10px; overflow: hidden;
+}
+@media (max-width: 560px) { .ad-slot ins, .ad-slot .ad-box { min-height: 250px; } }
