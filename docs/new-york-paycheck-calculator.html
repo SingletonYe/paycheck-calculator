@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New York Paycheck Calculator (2026) — Take-Home Pay After Tax</title>
+<meta name="description" content="Free New York paycheck calculator for 2026: enter your salary and see federal tax, FICA, New York state income tax and your exact take-home pay per paycheck.">
+<link rel="canonical" href="https://paycheck-calculator-2026.okou.app/new-york-paycheck-calculator.html">
+<link rel="stylesheet" href="assets/styles-1b725ed5.css">
+<meta property="og:title" content="New York Paycheck Calculator (2026) — Take-Home Pay After Tax">
+<meta property="og:description" content="Free New York paycheck calculator for 2026: enter your salary and see federal tax, FICA, New York state income tax and your exact take-home pay per paycheck.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "New York Paycheck Calculator (2026) \u2014 Take-Home Pay After Tax", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}</script>
+</head>
+<body data-mode="state" data-state="new-york">
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">Take&#8209;Home&nbsp;Pay&nbsp;2026</a>
+    <nav>
+      <a href="index.html">All states</a>
+      <a href="compare-take-home-pay-by-state.html">Compare</a>
+      <a href="method.html">Method</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+
+<h1>New York Paycheck Calculator (2026)</h1>
+<p class="lede">Work out your New York take-home pay for the 2026 tax year. New York uses a graduated income tax: 9 brackets running from 3.9% to 10.9%, with a $8,000 standard deduction for single filers ($16,050 for couples).</p>
+
+
+<section class="card">
+  <form id="calc" class="calc-form" autocomplete="off">
+    <div class="field">
+      <label for="amount">Gross pay</label>
+      <input type="number" id="amount" value="60000" min="0" step="100" inputmode="decimal">
+    </div>
+    <div class="field">
+      <label for="freq">Per</label>
+      <select id="freq">
+        <option value="annual" selected>Year</option>
+        <option value="monthly">Month</option>
+        <option value="semimonthly">Semi-monthly</option>
+        <option value="biweekly">Two weeks</option>
+        <option value="weekly">Week</option>
+        <option value="hourly">Hour</option>
+      </select>
+    </div>
+    <div class="field" id="hoursField" hidden>
+      <label for="hours">Hours / week</label>
+      <input type="number" id="hours" value="40" min="1" max="80" step="1">
+    </div>
+    <div class="field">
+      <label for="status">Filing status</label>
+      <select id="status">
+        <option value="single" selected>Single</option>
+        <option value="mfj">Married filing jointly</option>
+        <option value="hoh">Head of household</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="pretax">Pre-tax deductions (year)</label>
+      <input type="number" id="pretax" value="0" min="0" step="100">
+    </div>
+    <div class="field">
+      <label for="local">Local income tax %</label>
+      <input type="number" id="local" value="0" min="0" max="10" step="0.05">
+    </div>
+    <div class="field" id="stateField" hidden>
+      <label for="state">State</label>
+      <select id="state"></select>
+    </div>
+  </form>
+
+  <div class="results" id="results" aria-live="polite">
+    <div class="headline">
+      <div><span class="label">Estimated take-home</span><strong id="netAnnual">—</strong><span class="sub" id="netAnnualSub">per year</span></div>
+      <div><span class="label">Per paycheck</span><strong id="netPeriod">—</strong><span class="sub" id="netPeriodSub">—</span></div>
+    </div>
+    <table class="breakdown">
+      <thead><tr><th>Item</th><th>Annual</th><th>Per paycheck</th></tr></thead>
+      <tbody id="rows"></tbody>
+      <tfoot><tr><th>Take-home</th><td id="footNet">—</td><td id="footNetPeriod">—</td></tr></tfoot>
+    </table>
+    <p class="eff" id="effLine"></p>
+    <details class="rates">
+      <summary>Bracket detail</summary>
+      <ul id="bands"></ul>
+    </details>
+  </div>
+</section>
+
+
+<section>
+  <h2>What comes out of a New York paycheck</h2>
+  <table class="facts"><tr><th>State income tax on wages</th><td>Graduated, 9 brackets up to 10.9%</td></tr><tr><th>Standard deduction (single / couple)</th><td>$8,000 / $16,050</td></tr><tr><th>Federal tax</th><td>10%–37% progressive brackets, 2026 rates</td></tr><tr><th>Social Security</th><td>6.2% on the first $184,500 of wages</td></tr><tr><th>Medicare</th><td>1.45%, plus 0.9% above $200,000 (single)</td></tr><tr><th>State payroll programs</th><td>New York SDI ($31.20 flat); New York paid family leave (0.432% capped at $411.91)</td></tr></table>
+  <p class="note"><strong>Local income taxes:</strong> New York City residents pay an extra 3.078%-3.876% city income tax; Yonkers residents pay a 1.959% surcharge.</p>
+</section>
+
+<section>
+  <h2>New York tax brackets for 2026</h2>
+  <div class="two-col">
+  <div><h3>Single filer</h3><table class="examples"><thead><tr><th>Rate</th><th>Taxable income</th></tr></thead>
+  <tbody><tr><td>3.9%</td><td>$0 – $8,499</td></tr><tr><td>4.4%</td><td>$8,500 – $11,699</td></tr><tr><td>5.1%</td><td>$11,700 – $13,899</td></tr><tr><td>5.4%</td><td>$13,900 – $80,649</td></tr><tr><td>5.9%</td><td>$80,650 – $215,399</td></tr><tr><td>6.9%</td><td>$215,400 – $1,077,549</td></tr><tr><td>9.7%</td><td>$1,077,550 – $4,999,999</td></tr><tr><td>10.3%</td><td>$5,000,000 – $24,999,999</td></tr><tr><td>10.9%</td><td>over $25,000,000</td></tr></tbody></table>
+  <p class="muted">Standard deduction $8,000.</p></div>
+  <div><h3>Married filing jointly</h3><table class="examples"><thead><tr><th>Rate</th><th>Taxable income</th></tr></thead>
+  <tbody><tr><td>3.9%</td><td>$0 – $17,149</td></tr><tr><td>4.4%</td><td>$17,150 – $23,599</td></tr><tr><td>5.1%</td><td>$23,600 – $27,899</td></tr><tr><td>5.4%</td><td>$27,900 – $161,549</td></tr><tr><td>5.9%</td><td>$161,550 – $323,199</td></tr><tr><td>6.9%</td><td>$323,200 – $2,155,349</td></tr><tr><td>9.7%</td><td>$2,155,350 – $4,999,999</td></tr><tr><td>10.3%</td><td>$5,000,000 – $24,999,999</td></tr><tr><td>10.9%</td><td>over $25,000,000</td></tr></tbody></table>
+  <p class="muted">Standard deduction $16,050.</p></div>
+</div>
+</section>
+
+<section>
+  <h2>New York take-home pay by salary</h2>
+  <table class="examples">
+    <thead><tr><th>Gross salary</th><th>Federal tax</th><th>FICA</th><th>NY state tax</th><th>Take-home / year</th><th>/ month</th><th>/ 2 weeks</th></tr></thead>
+    <tbody>
+<tr><td>$50,000</td><td>$3,820</td><td>$3,825</td><td>$2,103</td><td>$40,005</td><td>$3,334</td><td>$1,539</td></tr>
+<tr><td>$75,000</td><td>$7,670</td><td>$5,738</td><td>$3,453</td><td>$57,784</td><td>$4,815</td><td>$2,222</td></tr>
+<tr><td>$100,000</td><td>$13,170</td><td>$7,650</td><td>$4,860</td><td>$73,877</td><td>$6,156</td><td>$2,841</td></tr>
+<tr><td>$150,000</td><td>$24,734</td><td>$11,475</td><td>$7,810</td><td>$105,538</td><td>$8,795</td><td>$4,059</td></tr>
+<tr class='alt'><td>$100,000 (joint)</td><td>$7,640</td><td>$7,650</td><td>$4,201</td><td>$80,066</td><td>$6,672</td><td>$3,079</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">No pre-tax deductions, no local income tax, 2026 figures.</p>
+</section>
+
+<section>
+  <h2>How to raise your New York take-home pay</h2>
+  <ul class="tight">
+    <li><strong>Contribute pre-tax.</strong> Every dollar into a 401(k) or HSA comes out of federal taxable income; the 2026 401(k) limit is $24,500.</li>
+    <li><strong>Fix your W-4.</strong> Withholding is only as accurate as the form behind it — a mismatch shows up as a refund or a bill.</li>
+    <li><strong>Know the FICA cap.</strong> Payroll tax on Social Security stops once year-to-date wages pass $184,500, so later paychecks jump.</li>
+    <li><strong>Check the graduated state schedule.</strong> New York brackets mean the top rate only applies to the last slice of income.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>New York paycheck questions</h2>
+  <details><summary>Does New York have a state income tax?</summary><p>New York uses a graduated income tax: 9 brackets running from 3.9% to 10.9%, with a $8,000 standard deduction for single filers ($16,050 for couples).</p></details>
+<details><summary>What is the take-home pay on $50,000 in New York?</summary><p>A single filer in New York keeps about $40,005 a year — $3,334 a month, or $1,539 every two weeks — after $3,820 of federal tax, $3,825 of FICA and $2,103 of state income tax.</p></details>
+<details><summary>What is the take-home pay on $100,000 in New York?</summary><p>A single filer keeps about $73,877 a year ($6,156 a month) and a married couple filing jointly keeps about $80,066. The difference is mostly federal bracket progression plus the state&#x27;s graduated brackets</p></details>
+<details><summary>What else comes out of a New York paycheck?</summary><p>Social Security at 6.2% up to the $184,500 wage base, Medicare at 1.45% with an extra 0.9% above $200,000, and any employer benefit premiums. Pre-tax retirement contributions such as a 401(k) reduce federal taxable income (2026 limit $24,500) but not FICA.</p></details>
+</section>
+
+<section>
+  <h2>Compare New York with other states</h2>
+  <p class="statelinks"><a href="alabama-paycheck-calculator.html">Alabama</a> <a href="alaska-paycheck-calculator.html">Alaska</a> <a href="arizona-paycheck-calculator.html">Arizona</a> <a href="arkansas-paycheck-calculator.html">Arkansas</a> <a href="california-paycheck-calculator.html">California</a> <a href="colorado-paycheck-calculator.html">Colorado</a> <a href="connecticut-paycheck-calculator.html">Connecticut</a> <a href="delaware-paycheck-calculator.html">Delaware</a></p>
+  <p><a href="compare-take-home-pay-by-state.html">Run a side-by-side comparison for any two states →</a></p>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does New York have a state income tax?", "acceptedAnswer": {"@type": "Answer", "text": "New York uses a graduated income tax: 9 brackets running from 3.9% to 10.9%, with a $8,000 standard deduction for single filers ($16,050 for couples)."}}, {"@type": "Question", "name": "What is the take-home pay on $50,000 in New York?", "acceptedAnswer": {"@type": "Answer", "text": "A single filer in New York keeps about $40,005 a year \u2014 $3,334 a month, or $1,539 every two weeks \u2014 after $3,820 of federal tax, $3,825 of FICA and $2,103 of state income tax."}}, {"@type": "Question", "name": "What is the take-home pay on $100,000 in New York?", "acceptedAnswer": {"@type": "Answer", "text": "A single filer keeps about $73,877 a year ($6,156 a month) and a married couple filing jointly keeps about $80,066. The difference is mostly federal bracket progression plus the state's graduated brackets"}}, {"@type": "Question", "name": "What else comes out of a New York paycheck?", "acceptedAnswer": {"@type": "Answer", "text": "Social Security at 6.2% up to the $184,500 wage base, Medicare at 1.45% with an extra 0.9% above $200,000, and any employer benefit premiums. Pre-tax retirement contributions such as a 401(k) reduce federal taxable income (2026 limit $24,500) but not FICA."}}]}</script>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><strong>Take-Home Pay 2026</strong> — free paycheck calculators for all 50 states and DC.</p>
+    <p>Estimates only. Federal figures use IRS Rev. Proc. 2025-32 (2026 brackets, $16,100 standard deduction) and the
+    $184,500 Social Security wage base. State income tax brackets come from the Tax Foundation's 2026 state tax
+    compilation. Local taxes, state disability programs and credits are not modeled. Not tax advice.</p>
+    <p><a href="method.html">Method &amp; sources</a> · <a href="compare-take-home-pay-by-state.html">Compare states</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+    <p class="muted">Last updated 2026-09-30</p>
+  </div>
+</footer>
+<script src="assets/states-data-8b774c60.js"></script>
+<script src="assets/engine-64e08894.js"></script>
+<script src="assets/app-1bf81c80.js"></script>
+</body>
+</html>

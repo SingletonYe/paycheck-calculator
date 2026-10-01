@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paycheck Calculator 2026 — Take-Home Pay For All 50 States</title>
+<meta name="description" content="Free paycheck calculator for 2026 covering all 50 states and DC: federal tax, FICA, state income tax and take-home pay per paycheck, with the 2026 brackets behind every number.">
+<link rel="canonical" href="https://paycheck-calculator-2026.okou.app/">
+<link rel="stylesheet" href="assets/styles-1b725ed5.css">
+<meta property="og:title" content="Paycheck Calculator 2026 — Take-Home Pay For All 50 States">
+<meta property="og:description" content="Free paycheck calculator for 2026 covering all 50 states and DC: federal tax, FICA, state income tax and take-home pay per paycheck, with the 2026 brackets behind every number.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Take-Home Pay 2026"}</script>
+</head>
+<body data-mode="state">
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">Take&#8209;Home&nbsp;Pay&nbsp;2026</a>
+    <nav>
+      <a href="index.html">All states</a>
+      <a href="compare-take-home-pay-by-state.html">Compare</a>
+      <a href="method.html">Method</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+
+<h1>Paycheck calculator for 2026</h1>
+<p class="lede">Enter your pay, pick your state and see exactly what lands in your account: federal income tax,
+Social Security, Medicare, state income tax and your take-home pay per year, per month and per paycheck.
+Every state uses its own 2026 bracket schedule, and the numbers update when the IRS and states publish new ones.</p>
+
+
+<section class="card">
+  <form id="calc" class="calc-form" autocomplete="off">
+    <div class="field">
+      <label for="amount">Gross pay</label>
+      <input type="number" id="amount" value="60000" min="0" step="100" inputmode="decimal">
+    </div>
+    <div class="field">
+      <label for="freq">Per</label>
+      <select id="freq">
+        <option value="annual" selected>Year</option>
+        <option value="monthly">Month</option>
+        <option value="semimonthly">Semi-monthly</option>
+        <option value="biweekly">Two weeks</option>
+        <option value="weekly">Week</option>
+        <option value="hourly">Hour</option>
+      </select>
+    </div>
+    <div class="field" id="hoursField" hidden>
+      <label for="hours">Hours / week</label>
+      <input type="number" id="hours" value="40" min="1" max="80" step="1">
+    </div>
+    <div class="field">
+      <label for="status">Filing status</label>
+      <select id="status">
+        <option value="single" selected>Single</option>
+        <option value="mfj">Married filing jointly</option>
+        <option value="hoh">Head of household</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="pretax">Pre-tax deductions (year)</label>
+      <input type="number" id="pretax" value="0" min="0" step="100">
+    </div>
+    <div class="field">
+      <label for="local">Local income tax %</label>
+      <input type="number" id="local" value="0" min="0" max="10" step="0.05">
+    </div>
+    <div class="field" id="stateField" hidden>
+      <label for="state">State</label>
+      <select id="state"></select>
+    </div>
+  </form>
+
+  <div class="results" id="results" aria-live="polite">
+    <div class="headline">
+      <div><span class="label">Estimated take-home</span><strong id="netAnnual">—</strong><span class="sub" id="netAnnualSub">per year</span></div>
+      <div><span class="label">Per paycheck</span><strong id="netPeriod">—</strong><span class="sub" id="netPeriodSub">—</span></div>
+    </div>
+    <table class="breakdown">
+      <thead><tr><th>Item</th><th>Annual</th><th>Per paycheck</th></tr></thead>
+      <tbody id="rows"></tbody>
+      <tfoot><tr><th>Take-home</th><td id="footNet">—</td><td id="footNetPeriod">—</td></tr></tfoot>
+    </table>
+    <p class="eff" id="effLine"></p>
+    <details class="rates">
+      <summary>Bracket detail</summary>
+      <ul id="bands"></ul>
+    </details>
+  </div>
+</section>
+
+
+<section><h2>Where the money goes in 2026</h2>
+<ul class="tight">
+  <li><strong>Federal:</strong> the standard deduction is $16,100 single, $32,200 married filing jointly, $24,150 head of household, with seven brackets from 10% to 37%.</li>
+  <li><strong>Payroll:</strong> Social Security 6.2% up to $184,500, Medicare 1.45%, plus 0.9% additional Medicare above $200,000.</li>
+  <li><strong>State:</strong> nine states tax no wage income, 15 use a flat rate and the rest use graduated brackets topping out anywhere from 2.5% to 13.3%.</li>
+  <li><strong>Local:</strong> New York City, Philadelphia, Detroit, most Ohio cities and Maryland counties add their own tax — use the local rate box above.</li>
+</ul></section>
+
+<section><h2>States with no income tax on wages</h2><div class="state-grid"><a class="state-card" href="alaska-paycheck-calculator.html"><span class="abbr">AL</span><span class="name">Alaska</span><span class="tag">No state income tax</span></a><a class="state-card" href="florida-paycheck-calculator.html"><span class="abbr">FL</span><span class="name">Florida</span><span class="tag">No state income tax</span></a><a class="state-card" href="nevada-paycheck-calculator.html"><span class="abbr">NE</span><span class="name">Nevada</span><span class="tag">No state income tax</span></a><a class="state-card" href="new-hampshire-paycheck-calculator.html"><span class="abbr">NH</span><span class="name">New Hampshire</span><span class="tag">No state income tax</span></a><a class="state-card" href="south-dakota-paycheck-calculator.html"><span class="abbr">SD</span><span class="name">South Dakota</span><span class="tag">No state income tax</span></a><a class="state-card" href="tennessee-paycheck-calculator.html"><span class="abbr">TE</span><span class="name">Tennessee</span><span class="tag">No state income tax</span></a><a class="state-card" href="texas-paycheck-calculator.html"><span class="abbr">TE</span><span class="name">Texas</span><span class="tag">No state income tax</span></a><a class="state-card" href="washington-paycheck-calculator.html"><span class="abbr">WA</span><span class="name">Washington</span><span class="tag">No state income tax</span></a><a class="state-card" href="wyoming-paycheck-calculator.html"><span class="abbr">WY</span><span class="name">Wyoming</span><span class="tag">No state income tax</span></a></div>
+<h2>Flat-rate states</h2><div class="state-grid"><a class="state-card" href="arizona-paycheck-calculator.html"><span class="abbr">AR</span><span class="name">Arizona</span><span class="tag">Flat 2.5%</span></a><a class="state-card" href="colorado-paycheck-calculator.html"><span class="abbr">CO</span><span class="name">Colorado</span><span class="tag">Flat 4.4%</span></a><a class="state-card" href="georgia-paycheck-calculator.html"><span class="abbr">GE</span><span class="name">Georgia</span><span class="tag">Flat 5.2%</span></a><a class="state-card" href="idaho-paycheck-calculator.html"><span class="abbr">ID</span><span class="name">Idaho</span><span class="tag">Flat 5.3%</span></a><a class="state-card" href="illinois-paycheck-calculator.html"><span class="abbr">IL</span><span class="name">Illinois</span><span class="tag">Flat 5%</span></a><a class="state-card" href="indiana-paycheck-calculator.html"><span class="abbr">IN</span><span class="name">Indiana</span><span class="tag">Flat 2.9%</span></a><a class="state-card" href="iowa-paycheck-calculator.html"><span class="abbr">IO</span><span class="name">Iowa</span><span class="tag">Flat 3.8%</span></a><a class="state-card" href="kentucky-paycheck-calculator.html"><span class="abbr">KE</span><span class="name">Kentucky</span><span class="tag">Flat 3.5%</span></a><a class="state-card" href="louisiana-paycheck-calculator.html"><span class="abbr">LO</span><span class="name">Louisiana</span><span class="tag">Flat 3%</span></a><a class="state-card" href="michigan-paycheck-calculator.html"><span class="abbr">MI</span><span class="name">Michigan</span><span class="tag">Flat 4.2%</span></a><a class="state-card" href="mississippi-paycheck-calculator.html"><span class="abbr">MI</span><span class="name">Mississippi</span><span class="tag">Flat 4%</span></a><a class="state-card" href="north-carolina-paycheck-calculator.html"><span class="abbr">NC</span><span class="name">North Carolina</span><span class="tag">Flat 4%</span></a><a class="state-card" href="ohio-paycheck-calculator.html"><span class="abbr">OH</span><span class="name">Ohio</span><span class="tag">Flat 2.8%</span></a><a class="state-card" href="pennsylvania-paycheck-calculator.html"><span class="abbr">PE</span><span class="name">Pennsylvania</span><span class="tag">Flat 3.1%</span></a><a class="state-card" href="utah-paycheck-calculator.html"><span class="abbr">UT</span><span class="name">Utah</span><span class="tag">Flat 4.5%</span></a></div>
+<h2>Graduated-rate states</h2><div class="state-grid"><a class="state-card" href="alabama-paycheck-calculator.html"><span class="abbr">AL</span><span class="name">Alabama</span><span class="tag">Up to 5%</span></a><a class="state-card" href="arkansas-paycheck-calculator.html"><span class="abbr">AR</span><span class="name">Arkansas</span><span class="tag">Up to 3.9%</span></a><a class="state-card" href="california-paycheck-calculator.html"><span class="abbr">CA</span><span class="name">California</span><span class="tag">Up to 13.3%</span></a><a class="state-card" href="connecticut-paycheck-calculator.html"><span class="abbr">CO</span><span class="name">Connecticut</span><span class="tag">Up to 7%</span></a><a class="state-card" href="delaware-paycheck-calculator.html"><span class="abbr">DE</span><span class="name">Delaware</span><span class="tag">Up to 6.6%</span></a><a class="state-card" href="district-of-columbia-paycheck-calculator.html"><span class="abbr">DO</span><span class="name">District of Columbia</span><span class="tag">Up to 10.8%</span></a><a class="state-card" href="hawaii-paycheck-calculator.html"><span class="abbr">HA</span><span class="name">Hawaii</span><span class="tag">Up to 11%</span></a><a class="state-card" href="kansas-paycheck-calculator.html"><span class="abbr">KA</span><span class="name">Kansas</span><span class="tag">Up to 5.6%</span></a><a class="state-card" href="maine-paycheck-calculator.html"><span class="abbr">MA</span><span class="name">Maine</span><span class="tag">Up to 7.1%</span></a><a class="state-card" href="maryland-paycheck-calculator.html"><span class="abbr">MA</span><span class="name">Maryland</span><span class="tag">Up to 6.5%</span></a><a class="state-card" href="massachusetts-paycheck-calculator.html"><span class="abbr">MA</span><span class="name">Massachusetts</span><span class="tag">Up to 9%</span></a><a class="state-card" href="minnesota-paycheck-calculator.html"><span class="abbr">MI</span><span class="name">Minnesota</span><span class="tag">Up to 9.8%</span></a><a class="state-card" href="missouri-paycheck-calculator.html"><span class="abbr">MI</span><span class="name">Missouri</span><span class="tag">Up to 4.7%</span></a><a class="state-card" href="montana-paycheck-calculator.html"><span class="abbr">MO</span><span class="name">Montana</span><span class="tag">Up to 5.7%</span></a><a class="state-card" href="nebraska-paycheck-calculator.html"><span class="abbr">NE</span><span class="name">Nebraska</span><span class="tag">Up to 4.5%</span></a><a class="state-card" href="new-jersey-paycheck-calculator.html"><span class="abbr">NJ</span><span class="name">New Jersey</span><span class="tag">Up to 10.8%</span></a><a class="state-card" href="new-mexico-paycheck-calculator.html"><span class="abbr">NM</span><span class="name">New Mexico</span><span class="tag">Up to 5.9%</span></a><a class="state-card" href="new-york-paycheck-calculator.html"><span class="abbr">NY</span><span class="name">New York</span><span class="tag">Up to 10.9%</span></a><a class="state-card" href="north-dakota-paycheck-calculator.html"><span class="abbr">ND</span><span class="name">North Dakota</span><span class="tag">Up to 2.5%</span></a><a class="state-card" href="oklahoma-paycheck-calculator.html"><span class="abbr">OK</span><span class="name">Oklahoma</span><span class="tag">Up to 4.5%</span></a><a class="state-card" href="oregon-paycheck-calculator.html"><span class="abbr">OR</span><span class="name">Oregon</span><span class="tag">Up to 9.9%</span></a><a class="state-card" href="rhode-island-paycheck-calculator.html"><span class="abbr">RI</span><span class="name">Rhode Island</span><span class="tag">Up to 6%</span></a><a class="state-card" href="south-carolina-paycheck-calculator.html"><span class="abbr">SC</span><span class="name">South Carolina</span><span class="tag">Up to 6%</span></a><a class="state-card" href="vermont-paycheck-calculator.html"><span class="abbr">VE</span><span class="name">Vermont</span><span class="tag">Up to 8.8%</span></a><a class="state-card" href="virginia-paycheck-calculator.html"><span class="abbr">VI</span><span class="name">Virginia</span><span class="tag">Up to 5.8%</span></a><a class="state-card" href="west-virginia-paycheck-calculator.html"><span class="abbr">WV</span><span class="name">West Virginia</span><span class="tag">Up to 4.8%</span></a><a class="state-card" href="wisconsin-paycheck-calculator.html"><span class="abbr">WI</span><span class="name">Wisconsin</span><span class="tag">Up to 7.6%</span></a></div></section>
+
+<section>
+  <h2>Hourly to yearly conversions</h2>
+  <p class="statelinks"><a href="15-an-hour-is-how-much-a-year.html">$15/hour</a> <a href="16-an-hour-is-how-much-a-year.html">$16/hour</a> <a href="17-an-hour-is-how-much-a-year.html">$17/hour</a> <a href="18-an-hour-is-how-much-a-year.html">$18/hour</a> <a href="19-an-hour-is-how-much-a-year.html">$19/hour</a> <a href="20-an-hour-is-how-much-a-year.html">$20/hour</a> <a href="21-an-hour-is-how-much-a-year.html">$21/hour</a> <a href="22-an-hour-is-how-much-a-year.html">$22/hour</a> <a href="23-an-hour-is-how-much-a-year.html">$23/hour</a> <a href="24-an-hour-is-how-much-a-year.html">$24/hour</a> <a href="25-an-hour-is-how-much-a-year.html">$25/hour</a> <a href="26-an-hour-is-how-much-a-year.html">$26/hour</a> <a href="27-an-hour-is-how-much-a-year.html">$27/hour</a> <a href="28-an-hour-is-how-much-a-year.html">$28/hour</a> <a href="29-an-hour-is-how-much-a-year.html">$29/hour</a> <a href="30-an-hour-is-how-much-a-year.html">$30/hour</a> <a href="32-an-hour-is-how-much-a-year.html">$32/hour</a> <a href="33-an-hour-is-how-much-a-year.html">$33/hour</a> <a href="35-an-hour-is-how-much-a-year.html">$35/hour</a> <a href="36-an-hour-is-how-much-a-year.html">$36/hour</a> <a href="38-an-hour-is-how-much-a-year.html">$38/hour</a> <a href="40-an-hour-is-how-much-a-year.html">$40/hour</a> <a href="42-an-hour-is-how-much-a-year.html">$42/hour</a> <a href="45-an-hour-is-how-much-a-year.html">$45/hour</a> <a href="48-an-hour-is-how-much-a-year.html">$48/hour</a> <a href="50-an-hour-is-how-much-a-year.html">$50/hour</a> <a href="55-an-hour-is-how-much-a-year.html">$55/hour</a> <a href="60-an-hour-is-how-much-a-year.html">$60/hour</a></p>
+</section>
+
+<section>
+  <h2>Salary to hourly conversions</h2>
+  <p class="statelinks"><a href="40000-a-year-is-how-much-an-hour.html">$40,000</a> <a href="45000-a-year-is-how-much-an-hour.html">$45,000</a> <a href="50000-a-year-is-how-much-an-hour.html">$50,000</a> <a href="55000-a-year-is-how-much-an-hour.html">$55,000</a> <a href="60000-a-year-is-how-much-an-hour.html">$60,000</a> <a href="65000-a-year-is-how-much-an-hour.html">$65,000</a> <a href="70000-a-year-is-how-much-an-hour.html">$70,000</a> <a href="75000-a-year-is-how-much-an-hour.html">$75,000</a> <a href="80000-a-year-is-how-much-an-hour.html">$80,000</a> <a href="85000-a-year-is-how-much-an-hour.html">$85,000</a> <a href="90000-a-year-is-how-much-an-hour.html">$90,000</a> <a href="95000-a-year-is-how-much-an-hour.html">$95,000</a> <a href="100000-a-year-is-how-much-an-hour.html">$100,000</a> <a href="110000-a-year-is-how-much-an-hour.html">$110,000</a> <a href="120000-a-year-is-how-much-an-hour.html">$120,000</a> <a href="130000-a-year-is-how-much-an-hour.html">$130,000</a> <a href="150000-a-year-is-how-much-an-hour.html">$150,000</a> <a href="200000-a-year-is-how-much-an-hour.html">$200,000</a></p>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><strong>Take-Home Pay 2026</strong> — free paycheck calculators for all 50 states and DC.</p>
+    <p>Estimates only. Federal figures use IRS Rev. Proc. 2025-32 (2026 brackets, $16,100 standard deduction) and the
+    $184,500 Social Security wage base. State income tax brackets come from the Tax Foundation's 2026 state tax
+    compilation. Local taxes, state disability programs and credits are not modeled. Not tax advice.</p>
+    <p><a href="method.html">Method &amp; sources</a> · <a href="compare-take-home-pay-by-state.html">Compare states</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+    <p class="muted">Last updated 2026-09-30</p>
+  </div>
+</footer>
+<script src="assets/states-data-8b774c60.js"></script>
+<script src="assets/engine-64e08894.js"></script>
+<script src="assets/app-1bf81c80.js"></script>
+</body>
+</html>

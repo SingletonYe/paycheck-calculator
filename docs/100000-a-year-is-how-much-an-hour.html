@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>$100,000 a Year Is How Much an Hour? (2026 Take-Home Pay)</title>
+<meta name="description" content="$100,000 a year works out to 48.08 an hour at 40 hours a week. See the monthly and biweekly figures and what is left after tax in Texas, Florida, California, New York and Illinois.">
+<link rel="canonical" href="https://paycheck-calculator-2026.okou.app/100000-a-year-is-how-much-an-hour.html">
+<link rel="stylesheet" href="assets/styles-1b725ed5.css">
+<meta property="og:title" content="$100,000 a Year Is How Much an Hour? (2026 Take-Home Pay)">
+<meta property="og:description" content="$100,000 a year works out to 48.08 an hour at 40 hours a week. See the monthly and biweekly figures and what is left after tax in Texas, Florida, California, New York and Illinois.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "$100,000 a Year Is How Much an Hour? (2026 Take-Home Pay)"}</script>
+</head>
+<body data-mode="state">
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">Take&#8209;Home&nbsp;Pay&nbsp;2026</a>
+    <nav>
+      <a href="index.html">All states</a>
+      <a href="compare-take-home-pay-by-state.html">Compare</a>
+      <a href="method.html">Method</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+
+<h1>$100,000 a Year Is How Much an Hour?</h1>
+<p class="lede"><strong>$100,000 a year</strong> is <strong>$48.08 an hour</strong> on a 40-hour week
+(2,080 hours a year), or $8,333 a month, $3,846 every two weeks, $1,923 a week. After federal tax and FICA
+a single filer keeps about $79,180 of it in a state with no income tax.</p>
+
+<section>
+  <h2>$100,000 a year at other schedules</h2>
+  <table class="examples">
+    <thead><tr><th>Hours / week</th><th>Hourly rate</th><th>Monthly gross</th></tr></thead>
+    <tbody><tr><td>40 hours / week</td><td>$48.08</td><td>$8,333 per month</td></tr>
+<tr><td>35 hours / week</td><td>$54.95</td><td>$8,333 per month</td></tr>
+<tr><td>30 hours / week</td><td>$64.10</td><td>$8,333 per month</td></tr>
+<tr><td>25 hours / week</td><td>$76.92</td><td>$8,333 per month</td></tr>
+<tr><td>20 hours / week</td><td>$96.15</td><td>$8,333 per month</td></tr></tbody>
+  </table>
+</section>
+
+<section>
+  <h2>$100,000 after tax, state by state</h2>
+  <table class="examples">
+    <thead><tr><th>State</th><th>Federal tax</th><th>FICA</th><th>State tax</th><th>Take-home / year</th><th>/ month</th></tr></thead>
+    <tbody><tr><td>Texas</td><td>$13,170</td><td>$7,650</td><td>$0</td><td>$79,180</td><td>$6,598</td></tr>
+<tr><td>Florida</td><td>$13,170</td><td>$7,650</td><td>$0</td><td>$79,180</td><td>$6,598</td></tr>
+<tr><td>California</td><td>$13,170</td><td>$7,650</td><td>$5,223</td><td>$72,657</td><td>$6,055</td></tr>
+<tr><td>New York</td><td>$13,170</td><td>$7,650</td><td>$4,860</td><td>$73,877</td><td>$6,156</td></tr>
+<tr><td>Illinois</td><td>$13,170</td><td>$7,650</td><td>$4,950</td><td>$74,230</td><td>$6,186</td></tr></tbody>
+  </table>
+  <p class="muted">Single filer, no pre-tax deductions, 2026 rates, local taxes excluded.</p>
+</section>
+
+
+<section class="card">
+  <form id="calc" class="calc-form" autocomplete="off">
+    <div class="field">
+      <label for="amount">Gross pay</label>
+      <input type="number" id="amount" value="60000" min="0" step="100" inputmode="decimal">
+    </div>
+    <div class="field">
+      <label for="freq">Per</label>
+      <select id="freq">
+        <option value="annual" selected>Year</option>
+        <option value="monthly">Month</option>
+        <option value="semimonthly">Semi-monthly</option>
+        <option value="biweekly">Two weeks</option>
+        <option value="weekly">Week</option>
+        <option value="hourly">Hour</option>
+      </select>
+    </div>
+    <div class="field" id="hoursField" hidden>
+      <label for="hours">Hours / week</label>
+      <input type="number" id="hours" value="40" min="1" max="80" step="1">
+    </div>
+    <div class="field">
+      <label for="status">Filing status</label>
+      <select id="status">
+        <option value="single" selected>Single</option>
+        <option value="mfj">Married filing jointly</option>
+        <option value="hoh">Head of household</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="pretax">Pre-tax deductions (year)</label>
+      <input type="number" id="pretax" value="0" min="0" step="100">
+    </div>
+    <div class="field">
+      <label for="local">Local income tax %</label>
+      <input type="number" id="local" value="0" min="0" max="10" step="0.05">
+    </div>
+    <div class="field" id="stateField" hidden>
+      <label for="state">State</label>
+      <select id="state"></select>
+    </div>
+  </form>
+
+  <div class="results" id="results" aria-live="polite">
+    <div class="headline">
+      <div><span class="label">Estimated take-home</span><strong id="netAnnual">—</strong><span class="sub" id="netAnnualSub">per year</span></div>
+      <div><span class="label">Per paycheck</span><strong id="netPeriod">—</strong><span class="sub" id="netPeriodSub">—</span></div>
+    </div>
+    <table class="breakdown">
+      <thead><tr><th>Item</th><th>Annual</th><th>Per paycheck</th></tr></thead>
+      <tbody id="rows"></tbody>
+      <tfoot><tr><th>Take-home</th><td id="footNet">—</td><td id="footNetPeriod">—</td></tr></tfoot>
+    </table>
+    <p class="eff" id="effLine"></p>
+    <details class="rates">
+      <summary>Bracket detail</summary>
+      <ul id="bands"></ul>
+    </details>
+  </div>
+</section>
+
+
+<section>
+  <h2>Breakdown of $100,000 a year</h2>
+  <table class="facts">
+    <tr><th>Per hour (40-hour week)</th><td>$48.08</td></tr>
+    <tr><th>Per week</th><td>$1,923</td></tr>
+    <tr><th>Every two weeks</th><td>$3,846</td></tr>
+    <tr><th>Per month</th><td>$8,333</td></tr>
+    <tr><th>Per year</th><td>$100,000</td></tr>
+    <tr><th>Take-home, no state income tax</th><td>$79,180</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Nearby salaries</h2>
+  <p class="statelinks"><a href="40000-a-year-is-how-much-an-hour.html">$40,000</a> <a href="45000-a-year-is-how-much-an-hour.html">$45,000</a> <a href="50000-a-year-is-how-much-an-hour.html">$50,000</a> <a href="55000-a-year-is-how-much-an-hour.html">$55,000</a> <a href="60000-a-year-is-how-much-an-hour.html">$60,000</a> <a href="65000-a-year-is-how-much-an-hour.html">$65,000</a></p>
+  <p><a href="compare-take-home-pay-by-state.html">Compare two states side by side →</a></p>
+</section>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><strong>Take-Home Pay 2026</strong> — free paycheck calculators for all 50 states and DC.</p>
+    <p>Estimates only. Federal figures use IRS Rev. Proc. 2025-32 (2026 brackets, $16,100 standard deduction) and the
+    $184,500 Social Security wage base. State income tax brackets come from the Tax Foundation's 2026 state tax
+    compilation. Local taxes, state disability programs and credits are not modeled. Not tax advice.</p>
+    <p><a href="method.html">Method &amp; sources</a> · <a href="compare-take-home-pay-by-state.html">Compare states</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+    <p class="muted">Last updated 2026-09-30</p>
+  </div>
+</footer>
+<script src="assets/states-data-8b774c60.js"></script>
+<script src="assets/engine-64e08894.js"></script>
+<script src="assets/app-1bf81c80.js"></script>
+</body>
+</html>

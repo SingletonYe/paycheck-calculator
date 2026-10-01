@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://paycheck-calculator-2026.okou.app/sitemap.xml

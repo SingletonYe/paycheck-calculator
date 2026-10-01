@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>$55 an Hour Is How Much a Year? (2026 Take-Home Pay)</title>
+<meta name="description" content="At $55 an hour you earn $114,400 a year before tax. See the monthly, biweekly and weekly figures, plus what actually lands in your account after federal tax and FICA in Texas, Florida, California, New York and Illinois.">
+<link rel="canonical" href="https://paycheck-calculator-2026.okou.app/55-an-hour-is-how-much-a-year.html">
+<link rel="stylesheet" href="assets/styles-1b725ed5.css">
+<meta property="og:title" content="$55 an Hour Is How Much a Year? (2026 Take-Home Pay)">
+<meta property="og:description" content="At $55 an hour you earn $114,400 a year before tax. See the monthly, biweekly and weekly figures, plus what actually lands in your account after federal tax and FICA in Texas, Florida, California, New York and Illinois.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "$55 an Hour Is How Much a Year? (2026 Take-Home Pay)"}</script>
+</head>
+<body data-mode="state">
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">Take&#8209;Home&nbsp;Pay&nbsp;2026</a>
+    <nav>
+      <a href="index.html">All states</a>
+      <a href="compare-take-home-pay-by-state.html">Compare</a>
+      <a href="method.html">Method</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+
+<h1>$55 an Hour Is How Much a Year?</h1>
+<p class="lede">At <strong>$55 an hour</strong>, a full-time schedule of 40 hours a week for 52 weeks pays
+<strong>$114,400</strong> a year before tax — $9,533 a month, $4,400 every two weeks. Below is the same rate at
+other weekly hours, and what is left after tax in five different states.</p>
+
+<section>
+  <h2>$55 an hour by hours worked</h2>
+  <table class="examples">
+    <thead><tr><th>Schedule</th><th>Per year</th><th>Per month</th><th>Every 2 weeks</th></tr></thead>
+    <tbody><tr><td>40 hours / week</td><td>$114,400</td><td>$9,533</td><td>$4,400</td></tr>
+<tr><td>35 hours / week</td><td>$100,100</td><td>$8,342</td><td>$3,850</td></tr>
+<tr><td>30 hours / week</td><td>$85,800</td><td>$7,150</td><td>$3,300</td></tr>
+<tr><td>25 hours / week</td><td>$71,500</td><td>$5,958</td><td>$2,750</td></tr>
+<tr><td>20 hours / week</td><td>$57,200</td><td>$4,767</td><td>$2,200</td></tr></tbody>
+  </table>
+  <p class="muted">Assumes 52 paid weeks. Unpaid leave or overtime at 1.5x changes the total.</p>
+</section>
+
+<section>
+  <h2>What $55 an hour is after tax</h2>
+  <table class="examples">
+    <thead><tr><th>State</th><th>Federal tax</th><th>FICA</th><th>State tax</th><th>Take-home / year</th></tr></thead>
+    <tbody><tr><td>Texas</td><td>$16,338</td><td>$8,752</td><td>$0</td><td>$89,310</td></tr>
+<tr><td>Florida</td><td>$16,338</td><td>$8,752</td><td>$0</td><td>$89,310</td></tr>
+<tr><td>California</td><td>$16,338</td><td>$8,752</td><td>$6,563</td><td>$81,261</td></tr>
+<tr><td>New York</td><td>$16,338</td><td>$8,752</td><td>$5,709</td><td>$83,158</td></tr>
+<tr><td>Illinois</td><td>$16,338</td><td>$8,752</td><td>$5,663</td><td>$83,648</td></tr></tbody>
+  </table>
+  <p class="muted">Single filer, no pre-tax deductions, 2026 rates. Local taxes are excluded — see each state page.</p>
+</section>
+
+
+<section class="card">
+  <form id="calc" class="calc-form" autocomplete="off">
+    <div class="field">
+      <label for="amount">Gross pay</label>
+      <input type="number" id="amount" value="60000" min="0" step="100" inputmode="decimal">
+    </div>
+    <div class="field">
+      <label for="freq">Per</label>
+      <select id="freq">
+        <option value="annual" selected>Year</option>
+        <option value="monthly">Month</option>
+        <option value="semimonthly">Semi-monthly</option>
+        <option value="biweekly">Two weeks</option>
+        <option value="weekly">Week</option>
+        <option value="hourly">Hour</option>
+      </select>
+    </div>
+    <div class="field" id="hoursField" hidden>
+      <label for="hours">Hours / week</label>
+      <input type="number" id="hours" value="40" min="1" max="80" step="1">
+    </div>
+    <div class="field">
+      <label for="status">Filing status</label>
+      <select id="status">
+        <option value="single" selected>Single</option>
+        <option value="mfj">Married filing jointly</option>
+        <option value="hoh">Head of household</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="pretax">Pre-tax deductions (year)</label>
+      <input type="number" id="pretax" value="0" min="0" step="100">
+    </div>
+    <div class="field">
+      <label for="local">Local income tax %</label>
+      <input type="number" id="local" value="0" min="0" max="10" step="0.05">
+    </div>
+    <div class="field" id="stateField" hidden>
+      <label for="state">State</label>
+      <select id="state"></select>
+    </div>
+  </form>
+
+  <div class="results" id="results" aria-live="polite">
+    <div class="headline">
+      <div><span class="label">Estimated take-home</span><strong id="netAnnual">—</strong><span class="sub" id="netAnnualSub">per year</span></div>
+      <div><span class="label">Per paycheck</span><strong id="netPeriod">—</strong><span class="sub" id="netPeriodSub">—</span></div>
+    </div>
+    <table class="breakdown">
+      <thead><tr><th>Item</th><th>Annual</th><th>Per paycheck</th></tr></thead>
+      <tbody id="rows"></tbody>
+      <tfoot><tr><th>Take-home</th><td id="footNet">—</td><td id="footNetPeriod">—</td></tr></tfoot>
+    </table>
+    <p class="eff" id="effLine"></p>
+    <details class="rates">
+      <summary>Bracket detail</summary>
+      <ul id="bands"></ul>
+    </details>
+  </div>
+</section>
+
+
+<section>
+  <h2>Key figures at $55 an hour</h2>
+  <table class="facts">
+    <tr><th>Per hour</th><td>$55</td></tr>
+    <tr><th>Per day (8 hours)</th><td>$440</td></tr>
+    <tr><th>Per week (40 hours)</th><td>$2,200</td></tr>
+    <tr><th>Per month</th><td>$9,533</td></tr>
+    <tr><th>Per year (2,080 hours)</th><td>$114,400</td></tr>
+    <tr><th>Take-home, no state income tax</th><td>$89,310</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Nearby hourly rates</h2>
+  <p class="statelinks"><a href="15-an-hour-is-how-much-a-year.html">$15/hour</a> <a href="16-an-hour-is-how-much-a-year.html">$16/hour</a> <a href="17-an-hour-is-how-much-a-year.html">$17/hour</a> <a href="18-an-hour-is-how-much-a-year.html">$18/hour</a> <a href="19-an-hour-is-how-much-a-year.html">$19/hour</a> <a href="20-an-hour-is-how-much-a-year.html">$20/hour</a></p>
+  <p><a href="index.html">See take-home pay for all 50 states →</a></p>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much is $55 an hour per year?", "acceptedAnswer": {"@type": "Answer", "text": "At $55 an hour for 40 hours a week, 52 weeks a year, gross pay is $114,400 before tax, or $9,533 a month."}}, {"@type": "Question", "name": "What is $55 an hour after tax?", "acceptedAnswer": {"@type": "Answer", "text": "For a single filer with no state income tax, $114,400 a year gross leaves about $89,310 after federal income tax and FICA."}}]}</script>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><strong>Take-Home Pay 2026</strong> — free paycheck calculators for all 50 states and DC.</p>
+    <p>Estimates only. Federal figures use IRS Rev. Proc. 2025-32 (2026 brackets, $16,100 standard deduction) and the
+    $184,500 Social Security wage base. State income tax brackets come from the Tax Foundation's 2026 state tax
+    compilation. Local taxes, state disability programs and credits are not modeled. Not tax advice.</p>
+    <p><a href="method.html">Method &amp; sources</a> · <a href="compare-take-home-pay-by-state.html">Compare states</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+    <p class="muted">Last updated 2026-09-30</p>
+  </div>
+</footer>
+<script src="assets/states-data-8b774c60.js"></script>
+<script src="assets/engine-64e08894.js"></script>
+<script src="assets/app-1bf81c80.js"></script>
+</body>
+</html>

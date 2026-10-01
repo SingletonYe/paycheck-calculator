@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Michigan Paycheck Calculator (2026) — Take-Home Pay After Tax</title>
+<meta name="description" content="Free Michigan paycheck calculator for 2026: enter your salary and see federal tax, FICA, Michigan state income tax and your exact take-home pay per paycheck.">
+<link rel="canonical" href="https://paycheck-calculator-2026.okou.app/michigan-paycheck-calculator.html">
+<link rel="stylesheet" href="assets/styles-1b725ed5.css">
+<meta property="og:title" content="Michigan Paycheck Calculator (2026) — Take-Home Pay After Tax">
+<meta property="og:description" content="Free Michigan paycheck calculator for 2026: enter your salary and see federal tax, FICA, Michigan state income tax and your exact take-home pay per paycheck.">
+<meta property="og:type" content="website">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Michigan Paycheck Calculator (2026) \u2014 Take-Home Pay After Tax", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}</script>
+</head>
+<body data-mode="state" data-state="michigan">
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="index.html">Take&#8209;Home&nbsp;Pay&nbsp;2026</a>
+    <nav>
+      <a href="index.html">All states</a>
+      <a href="compare-take-home-pay-by-state.html">Compare</a>
+      <a href="method.html">Method</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+
+<h1>Michigan Paycheck Calculator (2026)</h1>
+<p class="lede">Work out your Michigan take-home pay for the 2026 tax year. Michigan taxes wages at a flat rate of 4.2%, against a $0 standard deduction for single filers ($0 for couples).</p>
+
+
+<section class="card">
+  <form id="calc" class="calc-form" autocomplete="off">
+    <div class="field">
+      <label for="amount">Gross pay</label>
+      <input type="number" id="amount" value="60000" min="0" step="100" inputmode="decimal">
+    </div>
+    <div class="field">
+      <label for="freq">Per</label>
+      <select id="freq">
+        <option value="annual" selected>Year</option>
+        <option value="monthly">Month</option>
+        <option value="semimonthly">Semi-monthly</option>
+        <option value="biweekly">Two weeks</option>
+        <option value="weekly">Week</option>
+        <option value="hourly">Hour</option>
+      </select>
+    </div>
+    <div class="field" id="hoursField" hidden>
+      <label for="hours">Hours / week</label>
+      <input type="number" id="hours" value="40" min="1" max="80" step="1">
+    </div>
+    <div class="field">
+      <label for="status">Filing status</label>
+      <select id="status">
+        <option value="single" selected>Single</option>
+        <option value="mfj">Married filing jointly</option>
+        <option value="hoh">Head of household</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="pretax">Pre-tax deductions (year)</label>
+      <input type="number" id="pretax" value="0" min="0" step="100">
+    </div>
+    <div class="field">
+      <label for="local">Local income tax %</label>
+      <input type="number" id="local" value="0" min="0" max="10" step="0.05">
+    </div>
+    <div class="field" id="stateField" hidden>
+      <label for="state">State</label>
+      <select id="state"></select>
+    </div>
+  </form>
+
+  <div class="results" id="results" aria-live="polite">
+    <div class="headline">
+      <div><span class="label">Estimated take-home</span><strong id="netAnnual">—</strong><span class="sub" id="netAnnualSub">per year</span></div>
+      <div><span class="label">Per paycheck</span><strong id="netPeriod">—</strong><span class="sub" id="netPeriodSub">—</span></div>
+    </div>
+    <table class="breakdown">
+      <thead><tr><th>Item</th><th>Annual</th><th>Per paycheck</th></tr></thead>
+      <tbody id="rows"></tbody>
+      <tfoot><tr><th>Take-home</th><td id="footNet">—</td><td id="footNetPeriod">—</td></tr></tfoot>
+    </table>
+    <p class="eff" id="effLine"></p>
+    <details class="rates">
+      <summary>Bracket detail</summary>
+      <ul id="bands"></ul>
+    </details>
+  </div>
+</section>
+
+
+<section>
+  <h2>What comes out of a Michigan paycheck</h2>
+  <table class="facts"><tr><th>State income tax on wages</th><td>Flat 4.2%</td></tr><tr><th>Standard deduction (single / couple)</th><td>$0 / $0</td></tr><tr><th>Federal tax</th><td>10%–37% progressive brackets, 2026 rates</td></tr><tr><th>Social Security</th><td>6.2% on the first $184,500 of wages</td></tr><tr><th>Medicare</th><td>1.45%, plus 0.9% above $200,000 (single)</td></tr><tr><th>State payroll programs</th><td>None</td></tr></table>
+  <p class="note"><strong>Local income taxes:</strong> Detroit residents pay 2.4% (non-residents 1.2%); other Michigan cities levy up to 2.4%.</p>
+</section>
+
+<section>
+  <h2>Michigan tax brackets for 2026</h2>
+  <div class="two-col">
+  <div><h3>Single filer</h3><table class="examples"><thead><tr><th>Rate</th><th>Taxable income</th></tr></thead>
+  <tbody><tr><td>4.2%</td><td>over $0</td></tr></tbody></table>
+  <p class="muted">Standard deduction $0.</p></div>
+  <div><h3>Married filing jointly</h3><table class="examples"><thead><tr><th>Rate</th><th>Taxable income</th></tr></thead>
+  <tbody><tr><td>4.2%</td><td>over $0</td></tr></tbody></table>
+  <p class="muted">Standard deduction $0.</p></div>
+</div>
+</section>
+
+<section>
+  <h2>Michigan take-home pay by salary</h2>
+  <table class="examples">
+    <thead><tr><th>Gross salary</th><th>Federal tax</th><th>FICA</th><th>MI state tax</th><th>Take-home / year</th><th>/ month</th><th>/ 2 weeks</th></tr></thead>
+    <tbody>
+<tr><td>$50,000</td><td>$3,820</td><td>$3,825</td><td>$2,125</td><td>$40,230</td><td>$3,352</td><td>$1,547</td></tr>
+<tr><td>$75,000</td><td>$7,670</td><td>$5,738</td><td>$3,188</td><td>$58,405</td><td>$4,867</td><td>$2,246</td></tr>
+<tr><td>$100,000</td><td>$13,170</td><td>$7,650</td><td>$4,250</td><td>$74,930</td><td>$6,244</td><td>$2,882</td></tr>
+<tr><td>$150,000</td><td>$24,734</td><td>$11,475</td><td>$6,375</td><td>$107,416</td><td>$8,951</td><td>$4,131</td></tr>
+<tr class='alt'><td>$100,000 (joint)</td><td>$7,640</td><td>$7,650</td><td>$4,250</td><td>$80,460</td><td>$6,705</td><td>$3,095</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">No pre-tax deductions, no local income tax, 2026 figures.</p>
+</section>
+
+<section>
+  <h2>How to raise your Michigan take-home pay</h2>
+  <ul class="tight">
+    <li><strong>Contribute pre-tax.</strong> Every dollar into a 401(k) or HSA comes out of federal taxable income; the 2026 401(k) limit is $24,500.</li>
+    <li><strong>Fix your W-4.</strong> Withholding is only as accurate as the form behind it — a mismatch shows up as a refund or a bill.</li>
+    <li><strong>Know the FICA cap.</strong> Payroll tax on Social Security stops once year-to-date wages pass $184,500, so later paychecks jump.</li>
+    <li><strong>Check the flat-rate state schedule.</strong> One flat rate applies from the first dollar, so the timing of bonuses barely changes the bill.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Michigan paycheck questions</h2>
+  <details><summary>Does Michigan have a state income tax?</summary><p>Michigan taxes wages at a flat rate of 4.2%, against a $0 standard deduction for single filers ($0 for couples).</p></details>
+<details><summary>What is the take-home pay on $50,000 in Michigan?</summary><p>A single filer in Michigan keeps about $40,230 a year — $3,352 a month, or $1,547 every two weeks — after $3,820 of federal tax, $3,825 of FICA and $2,125 of state income tax.</p></details>
+<details><summary>What is the take-home pay on $100,000 in Michigan?</summary><p>A single filer keeps about $74,930 a year ($6,244 a month) and a married couple filing jointly keeps about $80,460. The difference is mostly federal bracket progression plus withholding on your W-4</p></details>
+<details><summary>What else comes out of a Michigan paycheck?</summary><p>Social Security at 6.2% up to the $184,500 wage base, Medicare at 1.45% with an extra 0.9% above $200,000, and any employer benefit premiums. Pre-tax retirement contributions such as a 401(k) reduce federal taxable income (2026 limit $24,500) but not FICA.</p></details>
+</section>
+
+<section>
+  <h2>Compare Michigan with other states</h2>
+  <p class="statelinks"><a href="alabama-paycheck-calculator.html">Alabama</a> <a href="alaska-paycheck-calculator.html">Alaska</a> <a href="arizona-paycheck-calculator.html">Arizona</a> <a href="arkansas-paycheck-calculator.html">Arkansas</a> <a href="california-paycheck-calculator.html">California</a> <a href="colorado-paycheck-calculator.html">Colorado</a> <a href="connecticut-paycheck-calculator.html">Connecticut</a> <a href="delaware-paycheck-calculator.html">Delaware</a></p>
+  <p><a href="compare-take-home-pay-by-state.html">Run a side-by-side comparison for any two states →</a></p>
+</section>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does Michigan have a state income tax?", "acceptedAnswer": {"@type": "Answer", "text": "Michigan taxes wages at a flat rate of 4.2%, against a $0 standard deduction for single filers ($0 for couples)."}}, {"@type": "Question", "name": "What is the take-home pay on $50,000 in Michigan?", "acceptedAnswer": {"@type": "Answer", "text": "A single filer in Michigan keeps about $40,230 a year \u2014 $3,352 a month, or $1,547 every two weeks \u2014 after $3,820 of federal tax, $3,825 of FICA and $2,125 of state income tax."}}, {"@type": "Question", "name": "What is the take-home pay on $100,000 in Michigan?", "acceptedAnswer": {"@type": "Answer", "text": "A single filer keeps about $74,930 a year ($6,244 a month) and a married couple filing jointly keeps about $80,460. The difference is mostly federal bracket progression plus withholding on your W-4"}}, {"@type": "Question", "name": "What else comes out of a Michigan paycheck?", "acceptedAnswer": {"@type": "Answer", "text": "Social Security at 6.2% up to the $184,500 wage base, Medicare at 1.45% with an extra 0.9% above $200,000, and any employer benefit premiums. Pre-tax retirement contributions such as a 401(k) reduce federal taxable income (2026 limit $24,500) but not FICA."}}]}</script>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><strong>Take-Home Pay 2026</strong> — free paycheck calculators for all 50 states and DC.</p>
+    <p>Estimates only. Federal figures use IRS Rev. Proc. 2025-32 (2026 brackets, $16,100 standard deduction) and the
+    $184,500 Social Security wage base. State income tax brackets come from the Tax Foundation's 2026 state tax
+    compilation. Local taxes, state disability programs and credits are not modeled. Not tax advice.</p>
+    <p><a href="method.html">Method &amp; sources</a> · <a href="compare-take-home-pay-by-state.html">Compare states</a> · <a href="privacy.html">Privacy</a> · <a href="terms.html">Terms</a></p>
+    <p class="muted">Last updated 2026-09-30</p>
+  </div>
+</footer>
+<script src="assets/states-data-8b774c60.js"></script>
+<script src="assets/engine-64e08894.js"></script>
+<script src="assets/app-1bf81c80.js"></script>
+</body>
+</html>
