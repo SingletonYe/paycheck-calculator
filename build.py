@@ -24,6 +24,12 @@ FLAT = [s for s in ORDER if len(STATES[s]["single"]) == 1]
 GRAD = [s for s in ORDER if len(STATES[s]["single"]) > 1]
 EXAMPLES_SINGLE = [50000, 75000, 100000, 150000]
 EXAMPLES_MFJ = [100000]
+REF_STATES = ["texas", "florida", "california", "new-york", "illinois"]
+HOURLY_RATES = [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                32, 33, 35, 36, 38, 40, 42, 45, 48, 50, 55, 60]
+SALARIES = [40000, 45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000,
+            85000, 90000, 95000, 100000, 110000, 120000, 130000, 150000, 200000]
+HOURS_PER_YEAR = 2080
 
 
 def usd(n):
@@ -47,6 +53,10 @@ def node_examples():
         for inc in EXAMPLES_MFJ:
             lines.append("out['%s|%s|mfj']=E.takeHome({grossAnnual:%d,filingStatus:'mfj',stateSlug:'%s'});"
                          % (slug, inc, inc, slug))
+    for inc in sorted(set([r * HOURS_PER_YEAR for r in HOURLY_RATES] + SALARIES)):
+        for st in REF_STATES:
+            lines.append("out['ref|%s|%s']=E.takeHome({grossAnnual:%d,filingStatus:'single',stateSlug:'%s'});"
+                         % (inc, st, inc, st))
     lines.append("console.log(JSON.stringify(out));")
     script = "\n".join(lines)
     raw = subprocess.run(["node", "-e", script], capture_output=True, text=True, check=True).stdout
@@ -377,7 +387,19 @@ Every state uses its own 2026 bracket schedule, and the numbers update when the 
 </ul></section>
 
 <section>{groups}</section>
-""".format(calc=CALC, groups=group_html)
+
+<section>
+  <h2>Hourly to yearly conversions</h2>
+  <p class="statelinks">{hourly_links}</p>
+</section>
+
+<section>
+  <h2>Salary to hourly conversions</h2>
+  <p class="statelinks">{salary_links}</p>
+</section>
+""".format(calc=CALC, groups=group_html,
+           hourly_links=" ".join('<a href="{0}-an-hour-is-how-much-a-year.html">${0}/hour</a>'.format(r) for r in HOURLY_RATES),
+           salary_links=" ".join('<a href="{0}-a-year-is-how-much-an-hour.html">{1}</a>'.format(a, usd(a)) for a in SALARIES))
     page = HEAD.format(title=title, desc=desc, canonical=BASE + "/", root="", schema=schema,
                        mode="state", bodyattr="", **ASSETS)
     page += body + FOOT.format(root="", sd="$16,100", today=TODAY, year=YEAR, **ASSETS)
@@ -530,6 +552,164 @@ def copy_assets():
     return out
 
 
+def hourly_page(rate):
+    gross = rate * HOURS_PER_YEAR
+    title = "${} an Hour Is How Much a Year? (2026 Take-Home Pay)".format(rate)
+    desc = ("At ${0} an hour you earn {1} a year before tax. See the monthly, biweekly and weekly figures, plus "
+            "what actually lands in your account after federal tax and FICA in Texas, Florida, California, "
+            "New York and Illinois.").format(rate, usd(gross))
+    slug = "{}-an-hour-is-how-much-a-year".format(rate)
+    canonical = "{}/{}.html".format(BASE, slug)
+    rows = []
+    for hours in (40, 35, 30, 25, 20):
+        annual = rate * hours * 52
+        rows.append("<tr><td>{} hours / week</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+            hours, usd(annual), usd(annual / 12), usd(annual / 26)))
+    ref_rows = []
+    for st in REF_STATES:
+        r = EX["ref|{}|{}".format(gross, st)]
+        ref_rows.append("<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+            STATES[st]["name"], usd(r["federalTax"]), usd(r["fica"]["total"]), usd(r["stateTax"]),
+            usd(r["netAnnual"])))
+    r_tx = EX["ref|{}|texas".format(gross)]
+    near = [x for x in HOURLY_RATES if x != rate][:6]
+    schema = json.dumps({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": "How much is ${} an hour per year?".format(rate),
+         "acceptedAnswer": {"@type": "Answer", "text": "At ${} an hour for 40 hours a week, 52 weeks a year, gross pay is {} before tax, or {} a month.".format(rate, usd(gross), usd(gross / 12))}},
+        {"@type": "Question", "name": "What is ${} an hour after tax?".format(rate),
+         "acceptedAnswer": {"@type": "Answer", "text": "For a single filer with no state income tax, {} a year gross leaves about {} after federal income tax and FICA.".format(usd(gross), usd(r_tx["netAnnual"]))}}]})
+    body = """
+<h1>${rate} an Hour Is How Much a Year?</h1>
+<p class="lede">At <strong>${rate} an hour</strong>, a full-time schedule of 40 hours a week for 52 weeks pays
+<strong>{gross}</strong> a year before tax — {monthly} a month, {biweekly} every two weeks. Below is the same rate at
+other weekly hours, and what is left after tax in five different states.</p>
+
+<section>
+  <h2>${rate} an hour by hours worked</h2>
+  <table class="examples">
+    <thead><tr><th>Schedule</th><th>Per year</th><th>Per month</th><th>Every 2 weeks</th></tr></thead>
+    <tbody>{rows}</tbody>
+  </table>
+  <p class="muted">Assumes 52 paid weeks. Unpaid leave or overtime at 1.5x changes the total.</p>
+</section>
+
+<section>
+  <h2>What ${rate} an hour is after tax</h2>
+  <table class="examples">
+    <thead><tr><th>State</th><th>Federal tax</th><th>FICA</th><th>State tax</th><th>Take-home / year</th></tr></thead>
+    <tbody>{ref_rows}</tbody>
+  </table>
+  <p class="muted">Single filer, no pre-tax deductions, {year} rates. Local taxes are excluded — see each state page.</p>
+</section>
+
+{calc}
+
+<section>
+  <h2>Key figures at ${rate} an hour</h2>
+  <table class="facts">
+    <tr><th>Per hour</th><td>${rate}</td></tr>
+    <tr><th>Per day (8 hours)</th><td>{daily}</td></tr>
+    <tr><th>Per week (40 hours)</th><td>{weekly}</td></tr>
+    <tr><th>Per month</th><td>{monthly}</td></tr>
+    <tr><th>Per year (2,080 hours)</th><td>{gross}</td></tr>
+    <tr><th>Take-home, no state income tax</th><td>{net_tx}</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Nearby hourly rates</h2>
+  <p class="statelinks">{near}</p>
+  <p><a href="index.html">See take-home pay for all 50 states →</a></p>
+</section>
+<script type="application/ld+json">{schema}</script>
+""".format(rate=rate, gross=usd(gross), monthly=usd(gross / 12), biweekly=usd(gross / 26),
+           daily=usd(rate * 8), weekly=usd(rate * 40), rows="\n".join(rows), ref_rows="\n".join(ref_rows),
+           calc=CALC, net_tx=usd(r_tx["netAnnual"]), year=YEAR,
+           near=" ".join('<a href="{0}-an-hour-is-how-much-a-year.html">${0}/hour</a>'.format(x) for x in near),
+           schema=schema)
+    page = HEAD.format(title=title, desc=desc, canonical=canonical, root="",
+                       schema=json.dumps({"@context": "https://schema.org", "@type": "WebPage", "name": title}),
+                       mode="state", bodyattr="", **ASSETS) + body
+    page += FOOT.format(root="", sd="$16,100", today=TODAY, year=YEAR, **ASSETS)
+    with open(os.path.join(OUT, slug + ".html"), "w") as f:
+        f.write(page)
+    return canonical
+
+
+def salary_page(amount):
+    hourly = amount / HOURS_PER_YEAR
+    title = "{} a Year Is How Much an Hour? (2026 Take-Home Pay)".format(usd(amount))
+    desc = ("{} a year works out to {:.2f} an hour at 40 hours a week. See the monthly and biweekly figures and "
+            "what is left after tax in Texas, Florida, California, New York and Illinois.").format(usd(amount), hourly)
+    slug = "{}-a-year-is-how-much-an-hour".format(amount)
+    canonical = "{}/{}.html".format(BASE, slug)
+    rows = []
+    for hours in (40, 35, 30, 25, 20):
+        h = amount / (hours * 52)
+        rows.append("<tr><td>{} hours / week</td><td>${:.2f}</td><td>{} per month</td></tr>".format(
+            hours, h, usd(amount / 12)))
+    ref_rows = []
+    for st in REF_STATES:
+        r = EX["ref|{}|{}".format(amount, st)]
+        ref_rows.append("<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td></tr>".format(
+            STATES[st]["name"], usd(r["federalTax"]), usd(r["fica"]["total"]), usd(r["stateTax"]),
+            usd(r["netAnnual"]), usd(r["netPerPeriod"]["monthly"])))
+    near = [x for x in SALARIES if x != amount][:6]
+    body = """
+<h1>{amount} a Year Is How Much an Hour?</h1>
+<p class="lede"><strong>{amount} a year</strong> is <strong>${hourly:.2f} an hour</strong> on a 40-hour week
+(2,080 hours a year), or {monthly} a month, {biweekly} every two weeks, {weekly} a week. After federal tax and FICA
+a single filer keeps about {net_tx} of it in a state with no income tax.</p>
+
+<section>
+  <h2>{amount} a year at other schedules</h2>
+  <table class="examples">
+    <thead><tr><th>Hours / week</th><th>Hourly rate</th><th>Monthly gross</th></tr></thead>
+    <tbody>{rows}</tbody>
+  </table>
+</section>
+
+<section>
+  <h2>{amount} after tax, state by state</h2>
+  <table class="examples">
+    <thead><tr><th>State</th><th>Federal tax</th><th>FICA</th><th>State tax</th><th>Take-home / year</th><th>/ month</th></tr></thead>
+    <tbody>{ref_rows}</tbody>
+  </table>
+  <p class="muted">Single filer, no pre-tax deductions, {year} rates, local taxes excluded.</p>
+</section>
+
+{calc}
+
+<section>
+  <h2>Breakdown of {amount} a year</h2>
+  <table class="facts">
+    <tr><th>Per hour (40-hour week)</th><td>${hourly:.2f}</td></tr>
+    <tr><th>Per week</th><td>{weekly}</td></tr>
+    <tr><th>Every two weeks</th><td>{biweekly}</td></tr>
+    <tr><th>Per month</th><td>{monthly}</td></tr>
+    <tr><th>Per year</th><td>{amount}</td></tr>
+    <tr><th>Take-home, no state income tax</th><td>{net_tx}</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Nearby salaries</h2>
+  <p class="statelinks">{near}</p>
+  <p><a href="compare-take-home-pay-by-state.html">Compare two states side by side →</a></p>
+</section>
+""".format(amount=usd(amount), hourly=hourly, monthly=usd(amount / 12), biweekly=usd(amount / 26),
+           weekly=usd(amount / 52), rows="\n".join(rows), ref_rows="\n".join(ref_rows), calc=CALC,
+           net_tx=usd(EX["ref|{}|texas".format(amount)]["netAnnual"]), year=YEAR,
+           near=" ".join('<a href="{0}-a-year-is-how-much-an-hour.html">{1}</a>'.format(x, usd(x)) for x in near))
+    page = HEAD.format(title=title, desc=desc, canonical=canonical, root="",
+                       schema=json.dumps({"@context": "https://schema.org", "@type": "WebPage", "name": title}),
+                       mode="state", bodyattr="", **ASSETS) + body
+    page += FOOT.format(root="", sd="$16,100", today=TODAY, year=YEAR, **ASSETS)
+    with open(os.path.join(OUT, slug + ".html"), "w") as f:
+        f.write(page)
+    return canonical
+
+
 def main():
     global EX, ASSETS
     if os.path.isdir(OUT):
@@ -545,6 +725,10 @@ def main():
     urls = [index_page(), compare_page()]
     for slug in ORDER:
         urls.append(state_page(slug))
+    for rate in HOURLY_RATES:
+        urls.append(hourly_page(rate))
+    for amount in SALARIES:
+        urls.append(salary_page(amount))
     urls.append(simple_page("method", "Method &amp; sources",
                             "Which IRS, SSA and state figures these paycheck estimates use, what is excluded and how the site is kept current.", METHOD))
     urls.append(simple_page("privacy", "Privacy policy",
