@@ -14,7 +14,7 @@ import subprocess
 ROOT = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(ROOT, "site")
 TODAY = datetime.date.today().isoformat()
-BASE = "https://paycheck-calculator-2026.okou.app"
+BASE = os.environ.get("SITE_BASE", "https://paycheck-calculator-2026.okou.app")
 YEAR = 2026
 ASSETS = {}
 GSC = ""

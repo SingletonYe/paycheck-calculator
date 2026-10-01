@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://paycheck-calculator-2026.okou.app/sitemap.xml
+Sitemap: https://singletonye.github.io/paycheck-calculator/sitemap.xml
