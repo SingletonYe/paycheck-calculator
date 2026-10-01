@@ -2,8 +2,10 @@
 
 Static, data-driven paycheck calculators for the 2026 US tax year, covering all 50 states + DC.
 
-- **Live site (canonical):** https://offctrl.ai/paycheck-calculator/
-- **Mirror:** https://singletonye.github.io/paycheck-calculator/ (canonical tags point at offctrl.ai)
+- **Live site:** https://calc.offctrl.ai/ (GitHub Pages, custom domain, HTTPS)
+- **Legacy URLs:** `https://singletonye.github.io/paycheck-calculator/*` 301-redirects to calc.offctrl.ai;
+  `https://offctrl.ai/paycheck-calculator/` holds a one-page redirect.
+- **Preview mirror (noindex artifact host):** https://paycheck-calculator-2026.okou.app
 - **Preview mirror (noindex, artifact host):** https://paycheck-calculator-2026.okou.app
 - **Stack:** static HTML + vanilla JS, no backend, no build dependencies beyond Python 3 and Node.
 
@@ -20,11 +22,8 @@ Static, data-driven paycheck calculators for the 2026 US tax year, covering all 
 ## Build and deploy
 
 ```bash
-# GitHub Pages (indexable): SITE_BASE defaults to the okou preview host
-SITE_BASE="https://singletonye.github.io/paycheck-calculator" python3 build.py
-rm -rf docs && cp -r site docs
-printf 'User-agent: *\nAllow: /\n\nSitemap: https://singletonye.github.io/paycheck-calculator/sitemap.xml\n' > docs/robots.txt
-git add -A && git commit -m "..." && git push     # Pages serves /docs on main
+tools/deploy.sh                       # builds for https://calc.offctrl.ai and pushes docs/
+tools/deploy.sh https://example.com   # switch base URL (canonical + sitemap + CNAME)
 
 # Optional: preview build on the artifact host
 python3 build.py && okou host site --site paycheck-calculator-2026
@@ -50,8 +49,9 @@ ADSENSE_CLIENT="ca-pub-XXXXXXXXXXXXXXXX" SITE_BASE="..." python3 build.py
 
 ## Hosting notes
 
-The okou artifact host serves every page with `X-Robots-Tag: noindex`, so it can never be indexed. GitHub Pages is the
-indexable host; a real domain should be attached before applying to AdSense.
+The okou artifact host serves every page with `X-Robots-Tag: noindex`, so it can never be indexed. The indexable site is
+GitHub Pages at `calc.offctrl.ai` (CNAME record `calc` -> `singletonye.github.io`, DNS only / grey cloud in Cloudflare,
+so GitHub can provision TLS). `https_enforced` should be turned on once the certificate is issued.
 
 ## Not modelled
 
