@@ -75,6 +75,7 @@
                 ['Medicare (1.45%)', -r.fica.medicare]];
     if (r.fica.additionalMedicare > 0) rows.push(['Additional Medicare (0.9%)', -r.fica.additionalMedicare]);
     rows.push([E.STATES[slug] ? E.STATES[slug].name + ' income tax' : 'State income tax', -r.stateTax]);
+    (r.statePayrollItems || []).forEach(function (item) { rows.push([item.label, -item.amount]); });
     if (r.localRate > 0) rows.push(['Local income tax (' + r.localRate.toFixed(3).replace(/0+$/, '').replace(/\.$/, '') + '%)', -r.localTax]);
 
     $('rows').innerHTML = rows.map(function (row) {

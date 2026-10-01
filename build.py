@@ -250,6 +250,11 @@ def state_page(slug):
         ("Federal tax", "10%–37% progressive brackets, 2026 rates"),
         ("Social Security", "6.2% on the first $184,500 of wages"),
         ("Medicare", "1.45%, plus 0.9% above $200,000 (single)"),
+        ("State payroll programs", ("None" if not s.get("payroll") else "; ".join(
+            "{} ({})".format(p["label"], ("${:,.2f}".format(p["flat"]) + " flat") if p.get("flat") is not None
+                             else ("{:.4g}%".format(p["rate"] * 100) + (" up to " + usd(p["base"]) if p.get("base") else "")
+                                   + (" capped at ${:,.2f}".format(p["cap"]) if p.get("cap") else "")))
+            for p in s.get("payroll", [])))),
     ]
     facts_html = "".join("<tr><th>{}</th><td>{}</td></tr>".format(k, v) for k, v in facts)
     local_html = "<p class=\"note\"><strong>Local income taxes:</strong> {}</p>".format(s["local"]) if s.get("local") else ""
@@ -493,7 +498,7 @@ time, so the tables and the interactive calculator can never drift apart.</p>
 <h2>What the calculator does not model</h2>
 <ul class="tight">
   <li><strong>Local income taxes.</strong> New York City, Yonkers, Philadelphia, Pittsburgh, Detroit and other Michigan cities, most Ohio cities, Indiana counties, Maryland counties and several Kentucky, Missouri, Alabama and West Virginia cities levy their own tax. Use the local rate box on the calculator.</li>
-  <li><strong>State disability and paid-leave programs</strong> (California SDI, New York and New Jersey disability, Washington PFML and WA Cares, Massachusetts and Connecticut PFML, Oregon Paid Leave and others).</li>
+  <li><strong>Some state disability and paid-leave programs.</strong> Modelled: California SDI (1.3% of all wages), Washington PFML employee share (0.8071% up to $184,500), New York SDI ($31.20 a year) and New York paid family leave (0.432%, capped at $411.91), and Rhode Island TDI (1.1% on the first $100,000). Not modelled: New Jersey TDI and FLI, Hawaii TDI, and the newer PFML programs in Colorado, Connecticut, Delaware, Maine, Maryland, Massachusetts, Minnesota, Oregon, Vermont and DC, plus Washington's WA Cares long-term care premium.</li>
   <li><strong>Credits and exemptions.</strong> State personal exemptions, earned income credits and child credits are ignored, which means states that use credits instead of a standard deduction (Connecticut, Illinois, Indiana, Massachusetts, Michigan, New Jersey, Ohio, Pennsylvania, Utah, West Virginia and others) are slightly overstated.</li>
   <li><strong>Head of household state schedules.</strong> Most states publish no separate HOH schedule, so HOH uses single-filer state brackets and the federal HOH standard deduction.</li>
   <li><strong>Itemized deductions, capital gains rates, alternative minimum tax and non-wage income.</strong></li>

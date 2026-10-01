@@ -48,6 +48,25 @@
     return filingStatus === 'mfj' ? (s.sdMfj || 0) : (s.sdSingle || 0);
   }
 
+  /* Employee-paid state payroll programs (SDI, paid family leave), separate from income tax. */
+  function statePayrollTax(slug, gross) {
+    var s = stateInfo(slug);
+    var items = [], total = 0;
+    if (!s || !s.payroll) return { items: items, total: 0 };
+    for (var i = 0; i < s.payroll.length; i++) {
+      var p = s.payroll[i], amount = 0;
+      if (p.flat != null) amount = p.flat;
+      else {
+        var wages = p.base ? Math.min(gross, p.base) : gross;
+        amount = wages * p.rate;
+        if (p.cap != null) amount = Math.min(amount, p.cap);
+      }
+      items.push({ label: p.label, amount: amount });
+      total += amount;
+    }
+    return { items: items, total: total };
+  }
+
   function structure(slug) {
     var s = stateInfo(slug);
     if (!s || !(s.single || []).length) return 'none';
@@ -115,7 +134,8 @@
     var localRate = Math.max(0, +o.localRate || 0);
     var localTax = (gross - preTax) * localRate;
 
-    var totalTax = fed.tax + fica.total + st.tax + localTax;
+    var statePayroll = statePayrollTax(slug, gross);
+    var totalTax = fed.tax + fica.total + st.tax + localTax + statePayroll.total;
     var net = gross - preTax - totalTax;
 
     return {
@@ -135,6 +155,8 @@
       stateBands: st.bands,
       localRate: localRate,
       localTax: localTax,
+      statePayrollItems: statePayroll.items,
+      statePayrollTax: statePayroll.total,
       hasStateTax: !!sb,
       totalTax: totalTax,
       netAnnual: net,
@@ -169,7 +191,7 @@
     FICA: FICA, LIMITS: LIMITS, PAY_PERIODS: PAY_PERIODS, STATES: STATES,
     takeHome: takeHome, bracketTax: bracketTax, federalTax: federalTax, computeFica: computeFica,
     stateInfo: stateInfo, stateBrackets: stateBrackets, stateStandardDeduction: stateStandardDeduction,
-    structure: structure, topStateRate: topStateRate, stateList: stateList,
+    structure: structure, topStateRate: topStateRate, stateList: stateList, statePayrollTax: statePayrollTax,
     marginalRate: marginalRate, money: money, money2: money2, pct: pct
   };
 
