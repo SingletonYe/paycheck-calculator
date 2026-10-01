@@ -823,6 +823,10 @@ def main():
                             "What this site collects (nothing you type leaves your browser) and how analytics and ads are handled.", PRIVACY))
     urls.append(simple_page("terms", "Terms of use",
                             "Plain-language terms for the free 2026 paycheck calculators on this site, including what the estimates do and do not cover.", TERMS))
+    indexnow = os.environ.get("INDEXNOW_KEY", "")
+    if indexnow:
+        with open(os.path.join(OUT, indexnow + ".txt"), "w") as f:
+            f.write(indexnow + "\n")
     if ADSENSE:
         with open(os.path.join(OUT, "ads.txt"), "w") as f:
             f.write("google.com, {}, DIRECT, f08c47fec0942fa0\n".format(ADSENSE.replace("ca-", "")))
