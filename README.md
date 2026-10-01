@@ -2,7 +2,8 @@
 
 Static, data-driven paycheck calculators for the 2026 US tax year, covering all 50 states + DC.
 
-- **Live site (indexable):** https://singletonye.github.io/paycheck-calculator/
+- **Live site (canonical):** https://offctrl.ai/paycheck-calculator/
+- **Mirror:** https://singletonye.github.io/paycheck-calculator/ (canonical tags point at offctrl.ai)
 - **Preview mirror (noindex, artifact host):** https://paycheck-calculator-2026.okou.app
 - **Stack:** static HTML + vanilla JS, no backend, no build dependencies beyond Python 3 and Node.
 
